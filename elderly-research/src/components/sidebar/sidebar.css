@@ -1,0 +1,52 @@
+.sidebar {
+    background: #fff;
+    width: 280px;
+    height: 45vh;
+    display: flex;
+    flex-direction: column;
+    margin: 1% 2% 1% 0;
+    border-radius: 15px;
+    box-shadow: 6px 6px 6px 0px rgba(0, 0, 0, 0.25);
+}
+
+.top-sidebar {
+    display: flex;
+    justify-content: space-between;
+    margin: 3% 3% 3% 3%;
+}
+
+.sidebar .buttons-section {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 15%;
+}
+
+.dropdown-menu {
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.25);
+    background-color: white;
+}
+
+.dropdown-menu .buttons-section {
+    width: 90%;
+    padding-left: 5%;
+    padding-bottom: 10%;
+}
+
+.hr {
+    margin-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.separator {
+    width: 250px;
+    height: 40px;
+}
+
+.space-filler{
+    width: 250px;
+    height: 0px;
+}

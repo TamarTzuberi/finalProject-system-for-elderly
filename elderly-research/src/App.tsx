@@ -7,7 +7,7 @@ export default class App extends React.Component<{}> {
       <div className="container-fluid">
       <div className="centreText">
         {/* React components must have a wrapper node/element */}
-        <h1>navit</h1>
+        <h1>Elderly</h1>
 
       </div>
     </div>

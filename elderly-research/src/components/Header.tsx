@@ -8,13 +8,7 @@ export const Header: FunctionComponent = () => {
         <Navbar>
             <Navbar>
                 <Navbar.Brand>
-                    <Link to="/FirstComponent">dankNotDank</Link>
-                </Navbar.Brand>
-                <Navbar.Brand>
-                    <Link to="/SecondComponent">dankNotDank2</Link>
-                </Navbar.Brand>
-                <Navbar.Brand>
-                    <Link to="/SearchComponent">dankNotDank2</Link>
+                    <Link to="/ResearcherPage">Hi</Link>
                 </Navbar.Brand>
             </Navbar>
             {/* <Nav>
