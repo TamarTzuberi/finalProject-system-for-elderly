@@ -233,7 +233,7 @@ function ResearcherPage(props) {
             <button
                 className="sb-btn"
                 onClick={() => showAM()}>
-                Acive Minutes
+                Active Minutes
             </button>
             <button
                 className="sb-btn"
@@ -269,11 +269,16 @@ function ResearcherPage(props) {
                 <div style={{ top: 20, left: '65%', width: '100px', backgroundColor: 'white', marginRight: '150px'}}>
                     <input type='date' className='start' value={start} onChange={e => handleStart(e.target.value)} />
                     <input type='date' className='end' value={end} onChange={e => handleEnd(e.target.value)} />
+
                 </div>
-                    <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px'}}>
-                        {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius}/>}
-                    </div>
-            
+                <div style={{ top: 20, left: '65%', width: '100px', alignSelf: 'center'}}>
+                <button className='saveButton'>Save Dates</button>
+
+            </div>
+
+                <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '70px'}}>
+                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius}/>}
+                </div> 
             </div>  
              <div className="rightContainer">
             <Sidebar history={props.history} content={contentSubjectiveData} />

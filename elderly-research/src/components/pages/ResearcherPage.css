@@ -13,3 +13,23 @@
 .leftContainer {
     margin-right: 150px;
 }
+.saveButton {
+    font-weight: 700;
+    text-transform: none;
+    font-size: 1em;
+    text-align: center;
+    color: #000000;
+    padding: 8px 0px;
+    width: 100px;
+    height: 35px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 10%;
+    cursor: pointer;
+    background-color: #f9f9f9;
+  }
+  
+  .saveButton:hover {
+    background-color: #9dcccd
+  }
+
