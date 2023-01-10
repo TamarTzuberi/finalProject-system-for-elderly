@@ -111,9 +111,9 @@ function ResearcherPage(props) {
         setShowBarObjective(true);
     }
 
-    const showHappiness = async () => {
+    const showDepression = async () => {
         extract(arr2,"sub")
-        setLabelSubjective('Happines Rate');
+        setLabelSubjective('Depression Rate');
         setMinSubjective(0);
         setMaxSubjective(10);
         setShowBarSubjective(true);
@@ -127,11 +127,23 @@ function ResearcherPage(props) {
         setShowBarSubjective(true);
 
     }
-    const showSelfHealth = async () => {
+    const showPhysicalCond = async () => {
         extract(arr2, "sub")
-        setLabelSubjective('Self Health Rate');
+        setLabelSubjective('Physical Condition Rate');
         setMinSubjective(0);
         setMaxSubjective(10);
+        setShowBarSubjective(true);
+    }
+
+    const clearObjectiveData = async (e) => {
+        setDataObjective([])
+        setLabelObjective('');
+        setShowBarObjective(true);
+    }
+
+    const clearSubjectiveData = async (e) => {
+        setDataSubjective([]);
+        setLabelSubjective('');
         setShowBarSubjective(true);
     }
 
@@ -175,12 +187,12 @@ function ResearcherPage(props) {
         setPointsStyle(pointsStyleArr)
         setPointsRadius(pointsRadiusArr)
     }
-    const contentSobjectiveData = (
+    const contentSubjectiveData = (
         <div className="buttons-section">
         <button
             className="sb-btn"
-            onClick={() => showHappiness()}>
-            Happiness
+            onClick={() => showDepression()}>
+            Depression
         </button>
         <button
             className="sb-btn"
@@ -189,8 +201,20 @@ function ResearcherPage(props) {
         </button>
         <button
             className="sb-btn"
-            onClick={() => showSelfHealth()}>
-            Self Health
+            onClick={() => showPhysicalCond()}>
+            Physical Condition
+        </button>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <button
+            className="sb-btn"
+            onClick={() => clearSubjectiveData()}>
+            Clear Data
         </button>
         </div>
     )
@@ -226,6 +250,12 @@ function ResearcherPage(props) {
                 onClick={() => downloadToCsv()}>
                 הורדת קובץ
             </button> */}
+            <br></br>
+            <button
+            className="sb-btn"
+            onClick={() => clearObjectiveData()}>
+            Clear Data
+            </button>
 
         </div>
     );
@@ -246,7 +276,7 @@ function ResearcherPage(props) {
             
             </div>  
              <div className="rightContainer">
-            <Sidebar history={props.history} content={contentSobjectiveData} />
+            <Sidebar history={props.history} content={contentSubjectiveData} />
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
-/* Reset styles */
+Reset styles
 html, body, body * {
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', Monospace;
   margin: 0;
   padding: 0;
   color: inherit;
@@ -14,7 +14,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
   background-position: center center;
-  background-color: #2b6fc8;
+  background-color: #2e5f9e;
 
 }
 
