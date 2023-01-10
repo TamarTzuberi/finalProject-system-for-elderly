@@ -5,7 +5,7 @@ import { Bar, Line } from 'react-chartjs-2';
 
 import Chart from 'chart.js/auto';
 // import Sidebar from "../sidebar/Sidebar";
-import '/src/App.css'
+// import 'elderly-research/src/App.css'
 
 const BarChart = (props) => {
     console.log("props ", props)
