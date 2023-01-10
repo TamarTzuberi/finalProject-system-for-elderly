@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 // eslint-disable-next-line no-unused-vars
-import axios from 'axios';
+import axios, { all } from 'axios';
 // import { Bar, Line } from 'react-chartjs-2';
 // import Chart from 'chart.js/auto';
 // import { serverURL } from '../../ClientUtils'
@@ -13,6 +13,7 @@ import './ResearcherPage.css';
 
 function ResearcherPage(props) {
     const [showBarObjective, setShowBarObjective] = useState(false);
+    const [allFeatures, setAllFeatures] = useState();
     const [showBarSubjective, setShowBarSubjective] = useState(false);
     const [dataObjective, setDataObjective] = useState([]);
     const [dataSubjective, setDataSubjective] = useState([]);
@@ -27,18 +28,67 @@ function ResearcherPage(props) {
     const [pointsRadius, setPointsRadius] = useState([]);
     const handleStart = (s) => {
         if (s) {
-            setStart(s)
+            setStart(s);
         }
     }
 
     const handleEnd = (e) => {
         if (e) {
-            setEnd(e);
+            setEnd(e); 
         }
     }
 
-    const [start, setStart] = useState();
-    const [end, setEnd] = useState();
+    const [start, setStart] = useState("");
+    const [end, setEnd] = useState("");
+
+    // const 
+    
+    const getAllFeatures = async () => 
+    {
+        const allFeaturesFromDB = {steps: [] ,sleeping: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
+        const elderlyId = 111; //just for now
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+    await axios.get(`http://localhost:3000/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
+    .then(responseSteps => {
+        console.log("STEPS -",responseSteps);
+        allFeaturesFromDB.steps = responseSteps.data;
+    })
+    await axios.get(`http://localhost:3000/researcher/features/sleeping/${elderlyId}/${startDate}/${endDate}`)
+    .then(responseSleeping => {
+        console.log("SLEEPING -",responseSleeping);
+        allFeaturesFromDB.sleeping = responseSleeping.data;
+    })
+    await axios.get(`http://localhost:3000/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
+    .then(responseHr => {
+        console.log("HR -",responseHr);
+        allFeaturesFromDB.hr = responseHr.data;
+    })
+    await axios.get(`http://localhost:3000/researcher/features/loneliness/${elderlyId}/${startDate}/${endDate}`)
+    .then(responseLonliness => {
+        console.log("LONLINESS -",responseLonliness);
+        allFeaturesFromDB.loneliness = responseLonliness.data;
+    })
+    await axios.get(`http://localhost:3000/researcher/features/depression/${elderlyId}/${startDate}/${endDate}`)
+    .then(responseDepression => {
+        console.log("DEPRESSION -",responseDepression);
+        allFeaturesFromDB.depression = responseDepression.data;
+    })
+    await axios.get(`http://localhost:3000/researcher/features/physicalCondition/${elderlyId}/${startDate}/${endDate}`)
+    .then(responsePhysicalCondition => {
+        console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
+        allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
+
+        console.log("ALL FEATURES -", allFeatures)
+    })
+    .catch(error => {
+        console.log(error);
+    });
+
+    setAllFeatures(allFeaturesFromDB);
+}
+
 
 
     const result1 = {value: 4000, start: 1671919200000}
@@ -46,8 +96,15 @@ function ResearcherPage(props) {
     const result3 = {value: 8000, start: 1672092000000}
     const arr1 = [result1, result2, result3]
 
+    const saveDate = async(e) =>
+    {
+        getAllFeatures();
+        //to check valid dates
+    }
+
     const showSteps = async (e) => {
-        extract(arr1,"obj")
+  
+        extract(allFeatures.steps,"obj")
         setLabelObjective('Steps');
         setMinObjective(0);
         setMaxObjective(10000);
@@ -61,7 +118,7 @@ function ResearcherPage(props) {
 
     const showHR = async () => {
 
-        extract(arr3,"obj")
+        extract(allFeatures.hr,"obj")
         setLabelObjective('HR');
         setMinObjective(0);
         setMaxObjective(130);
@@ -104,7 +161,7 @@ function ResearcherPage(props) {
     const arr2 = [result4, result5, result6]
 
     const showSleep = async () => {
-        extract(arr2, "obj")
+        extract(allFeatures.sleeping, "obj")
         setLabelObjective('Hours of Sleep');
         setMinObjective(0);
         setMaxObjective(10);
@@ -112,7 +169,7 @@ function ResearcherPage(props) {
     }
 
     const showDepression = async () => {
-        extract(arr2,"sub")
+        extract(allFeatures.depression,"sub")
         setLabelSubjective('Depression Rate');
         setMinSubjective(0);
         setMaxSubjective(10);
@@ -120,7 +177,7 @@ function ResearcherPage(props) {
 
     }
     const showLoneliness = async () => {
-        extract(arr2, "sub")
+        extract(allFeatures.loneliness, "sub")
         setLabelSubjective('Lonliness Rate');
         setMinSubjective(0);
         setMaxSubjective(20);
@@ -128,7 +185,7 @@ function ResearcherPage(props) {
 
     }
     const showPhysicalCond = async () => {
-        extract(arr2, "sub")
+        extract(allFeatures.physicalCondition, "sub")
         setLabelSubjective('Physical Condition Rate');
         setMinSubjective(0);
         setMaxSubjective(10);
@@ -272,7 +329,7 @@ function ResearcherPage(props) {
 
                 </div>
                 <div style={{ top: 20, left: '65%', width: '100px', alignSelf: 'center'}}>
-                <button className='saveButton'>Save Dates</button>
+                <button className='saveButton' onClick={() => saveDate()}>Save Dates</button>
 
             </div>
 

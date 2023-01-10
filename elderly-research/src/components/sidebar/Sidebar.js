@@ -19,16 +19,6 @@ function Sidebar({history, content}) {
 
 	return (
 		<div className="sidebar">
-			<div className="top-sidebar">
-				{/* <div className="right">
-					<button className="nav-buttons" onClick={onClick}>התנתק</button>
-				</div> */}
-				<div className="left">
-				</div>
-			</div>
-			<div className="hr">
-				{/* <img className="space-filler" src={spaceFiller} alt=''/> */}
-			</div>
 			{content}
 		</div>
 	);
