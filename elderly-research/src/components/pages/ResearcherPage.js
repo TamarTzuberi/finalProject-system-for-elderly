@@ -20,7 +20,8 @@ function ResearcherPage(props) {
     const [labelObjective, setLabelObjective] = useState('');
     const [labelSubjective, setLabelSubjective] = useState('');
     const [labels, setLabels] = useState([]);
-    const [showLegend, setShowLegend] = useState(false);
+    const [showLegendObjective, setShowLegendObjective] = useState(false);
+    const [showLegendSubjective, setShowLegendSubjective] = useState(false);
     const [minObjective, setMinObjective] = useState(0);
     const [maxObjective, setMaxObjective] = useState(0);
     const [minSubjective, setMinSubjective] = useState(0);
@@ -112,7 +113,7 @@ function ResearcherPage(props) {
   
         extract(allFeatures.steps,"obj")
         setLabelObjective('Steps');
-        setShowLegend(true);
+        setShowLegendObjective(true);
         setMinObjective(0);
         setMaxObjective(10000);
         setShowBarObjective(true);
@@ -127,7 +128,7 @@ function ResearcherPage(props) {
 
         extract(allFeatures.hr,"obj")
         setLabelObjective('HR');
-        setShowLegend(true);
+        setShowLegendObjective(true);
         setMinObjective(0);
         setMaxObjective(130);
         setShowBarObjective(true);
@@ -143,7 +144,7 @@ function ResearcherPage(props) {
     const showAM = async () => {
         extract(allFeatures.activeMinutes,"obj" )
         setLabelObjective('Active Minutes');
-        setShowLegend(true);
+        setShowLegendObjective(true);
         setMinObjective(0);
         setMaxObjective(300);
         setShowBarObjective(true);
@@ -153,7 +154,7 @@ function ResearcherPage(props) {
     const showDepression = async () => {
         extract(allFeatures.depression,"sub")
         setLabelSubjective('Depression Rate');
-        setShowLegend(true);
+        setShowLegendSubjective(true);
         setMinSubjective(0);
         setMaxSubjective(10);
         setShowBarSubjective(true);
@@ -163,7 +164,7 @@ function ResearcherPage(props) {
     const showLoneliness = async () => {
         extract(allFeatures.loneliness, "sub")
         setLabelSubjective('Lonliness Rate');
-        setShowLegend(true);
+        setShowLegendSubjective(true);
         setMinSubjective(0);
         setMaxSubjective(20);
         setShowBarSubjective(true);
@@ -172,7 +173,7 @@ function ResearcherPage(props) {
     const showPhysicalCondition = async () => {
         extract(allFeatures.physicalCondition, "sub")
         setLabelSubjective('Physical Condition Rate');
-        setShowLegend(true);
+        setShowLegendSubjective(true);
         setMinSubjective(0);
         setMaxSubjective(10);
         setShowBarSubjective(true);
@@ -181,14 +182,14 @@ function ResearcherPage(props) {
     const clearObjectiveData = async (e) => {
         setDataObjective([])
         setLabelObjective('');
-        setShowLegend(false);
+        setShowLegendObjective(false);
         setShowBarObjective(true);
     }
 
     const clearSubjectiveData = async (e) => {
         setDataSubjective([]);
         setLabelSubjective('');
-        setShowLegend(false);
+        setShowLegendSubjective(false);
         setShowBarSubjective(true);
     }
 
@@ -337,7 +338,7 @@ function ResearcherPage(props) {
             </div>
 
                 <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '70px'}}>
-                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius} showLegend={showLegend}/>}
+                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius} showLegendObjective={showLegendObjective} showLegendSubjective={showLegendSubjective}/>}
                 </div> 
             </div>  
              <div className="rightContainer">
