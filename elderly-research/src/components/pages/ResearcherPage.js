@@ -9,11 +9,14 @@ import axios, { all } from 'axios';
 import BarChart from '../charts/BarChart';
 import './ResearcherPage.css';
 // import {hasCookie} from '../CookieManager';
+import Papa from 'papaparse';
+
 
 
 function ResearcherPage(props) {
     const [showBarObjective, setShowBarObjective] = useState(false);
     const [allFeatures, setAllFeatures] = useState();
+    const [allMeetings, setAllMeetings] = useState();
     const [showBarSubjective, setShowBarSubjective] = useState(false);
     const [dataObjective, setDataObjective] = useState([]);
     const [dataSubjective, setDataSubjective] = useState([]);
@@ -80,7 +83,7 @@ function ResearcherPage(props) {
         console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
         allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
-        console.log("ALL FEATURES -", allFeatures)
+        console.log("ALL FEATURES FROM DB -", allFeaturesFromDB)
     })
     .catch(error => {
         console.log(error);
@@ -106,6 +109,7 @@ function ResearcherPage(props) {
     const setDate = async(e) =>
     {
         getAllFeatures();
+        getAllMeetings();
         //to check valid dates
     }
 
@@ -166,7 +170,7 @@ function ResearcherPage(props) {
         setLabelSubjective('Lonliness Rate');
         setShowLegendSubjective(true);
         setMinSubjective(0);
-        setMaxSubjective(20);
+        setMaxSubjective(10);
         setShowBarSubjective(true);
 
     }
@@ -183,18 +187,17 @@ function ResearcherPage(props) {
         setDataObjective([])
         setLabelObjective('');
         setShowLegendObjective(false);
-        setShowBarObjective(true);
+        // setShowBarObjective(false);
     }
 
     const clearSubjectiveData = async (e) => {
         setDataSubjective([]);
         setLabelSubjective('');
         setShowLegendSubjective(false);
-        setShowBarSubjective(true);
+        // setShowBarSubjective(false);
     }
 
     const stringToDate = (date) =>{
-        console.log("tamar , type of date:",typeof(date));
         const today = new Date(date);
         const year = today.getFullYear();
         const month = today.getMonth();
@@ -202,7 +205,35 @@ function ResearcherPage(props) {
         const dateString = `${day}/${month + 1}/${year}`;
         return dateString
     }
-    const getMeetingsArr = async () =>
+
+
+    const downloadToCsv = async () => {
+        const elderlyId = "123569485";
+        let rows = [];
+        rows.push(['Date', 'Steps', 'Heart_Rate', 'Active_Minutes', 'Depression', 'Loneliness', 'Physical Condition'])
+        for (let day = 0; day < allFeatures.steps.length; day++) {
+            let date = allFeatures.steps[day].date;
+            let step = allFeatures.steps[day] ? allFeatures.steps[day].value : "no data";
+            let hr = allFeatures.hr[day] ? allFeatures.hr[day].value : "no data";
+            let am = allFeatures.activeMinutes[day] ? allFeatures.activeMinutes[day].value : "no data";
+            let dep = allFeatures.depression[day] ? allFeatures.depression[day].value : "no data";
+            let lonliness = allFeatures.loneliness[day] ? allFeatures.loneliness[day].value : "no data";
+            let physicalCond = allFeatures.physicalCondition[day] ? allFeatures.physicalCondition[day].value : "no data";
+            rows.push([date, step + '', hr + '', am + '', dep + '', lonliness + '', physicalCond + '']);
+
+        }
+
+        const csv = Papa.unparse(rows);
+        const csvData = encodeURI(csv);
+        const link = document.createElement('a');
+        link.href = 'data:text/csv;charset=utf-8,' + csvData;
+        link.download = `${elderlyId}_data.csv`;;
+        document.body.appendChild(link);
+        link.click();
+    }
+
+
+    const getAllMeetings = async () =>
     {
         const elderlyId = "123569485";
         let meetingsArr = [];
@@ -216,7 +247,7 @@ function ResearcherPage(props) {
         });
 
         const meetingDatesArr = meetingsArr.map(m => new Date(m.date).getTime());
-        return meetingDatesArr;
+        setAllMeetings(meetingDatesArr);
 
     }
 
@@ -225,14 +256,12 @@ function ResearcherPage(props) {
         let dateArr = []
         let pointsStyleArr = []
         let pointsRadiusArr = []
-        const meetingDatesArr = getMeetingsArr();
         for (let key in dataDateArr) {
             let dataVal = dataDateArr[key].value
             let date = new Date(dataDateArr[key].date).getTime();
-            console.log("tamar, date in extract :", date );
             dataArr.push(dataVal)
             dateArr.push(stringToDate(date))
-            if (meetingDatesArr.includes(date)) {
+            if (allMeetings.includes(date)) {
                 pointsStyleArr.push('star')
                 pointsRadiusArr.push(10)
             }
@@ -254,6 +283,7 @@ function ResearcherPage(props) {
 
     const contentSubjectiveData = (
         <div className="buttons-section">
+        <h2>Subjective Parameters</h2>
         <button
             className="sb-btn"
             onClick={() => showDepression()}>
@@ -285,6 +315,7 @@ function ResearcherPage(props) {
     )
     const contentObjectiveData = (
         <div className="buttons-section">
+            <h2>Objective Parameters</h2>
             <button
                 className="sb-btn"
                 onClick={() => showSteps()}>
@@ -300,14 +331,11 @@ function ResearcherPage(props) {
                 onClick={() => showAM()}>
                 Active Minutes
             </button>
-            {/* <button
+            <button
                 className="sb-btn"
                 onClick={() => downloadToCsv()}>
-                הורדת קובץ
-            </button> */}
-            <br></br>
-            <br></br>
-            <br></br>
+                Download To CSV
+            </button>
             <br></br>
             <br></br>
             <br></br>
