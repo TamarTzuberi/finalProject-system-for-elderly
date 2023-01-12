@@ -6,8 +6,8 @@ import { Bar, Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 // import Sidebar from "../sidebar/Sidebar";
 // import 'elderly-research/src/App.css'
-// import 'C:\\Users\\Stav\\final project\\finalProject-system-for-elderly\\elderly-research\\src\\App.css';
-import 'C:\\Users\\User\\tamar\\final-project\\finalProject-system-for-elderly\\elderly-research\\src\\App.css'
+import 'C:\\Users\\Stav\\final project\\finalProject-system-for-elderly\\elderly-research\\src\\App.css';
+// import 'C:\\Users\\User\\tamar\\final-project\\finalProject-system-for-elderly\\elderly-research\\src\\App.css'
 
 
 const BarChart = (props) => {
@@ -45,7 +45,10 @@ const BarChart = (props) => {
                 data: props.dataObjective,
                 yAxisID: 'A',
                 pointStyle: 'circle',
-                pointRadius: 2
+                pointRadius: 2,
+                legend: {
+                    display: props.showLegendObjective
+                },
             },
             {
                 label: props.labelSubjective,
@@ -56,7 +59,10 @@ const BarChart = (props) => {
                 data: props.dataSubjective,
                 yAxisID: 'B',
                 pointStyle: props.pointsStyle,
-                pointRadius: props.pointsRadius
+                pointRadius: props.pointsRadius,
+                legend: {
+                    display: props.showLegendSubjective
+                },
 
             }
         ]
@@ -68,13 +74,17 @@ const BarChart = (props) => {
             <Bar style={{ textAlign: 'center' }}
                 data={state}
                 options={{
+                    plugins:{
+                        A : {
+                            legend:{
+                                display: props.showLegendObjective,
+                            },
+                            
+                        },
+                    },
                     title: {
                         display: true,
                         fontSize: 20
-                    },
-                    legend: {
-                        display: true,
-                        // position: 'right'
                     },
                     scales: {
                         A:
@@ -104,21 +114,20 @@ const BarChart = (props) => {
             <Line style={{ textAlign: 'center' }}
                 data={state}
                 options={{
-                    plugins:{
-                    annotation: {
-                        annotations: [{
-                         point1: {
-                            type: 'point',
-                            xValue: 1,
-                            yValue: 5,
-                            borderColor: 'red',
-                            borderWidth: 4,
-                            backgroundColor: 'pink'
-                          }
-                        }
-                        ],
-                      },
-                    },
+                    // plugins:{
+                    //     A : {
+                    //     legend:{
+                    //         display: props.showLegendObjective,
+                    //     },
+                        
+                    // },
+                    // B : {
+                    //     legend:{
+                    //         display: props.showLegendSubjective,
+                    //     },
+                        
+                    // }
+                    // },
                     title: {
                         display: true,
                         fontSize: 20
