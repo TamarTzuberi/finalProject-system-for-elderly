@@ -192,17 +192,33 @@ function ResearcherPage(props) {
         const dateString = `${day}/${month + 1}/${year}`;
         return dateString
     }
+    const getMeetingsArr = async () =>
+    {
+        const elderlyId = "123569485";
+        let meetingsArr = [];
+        await axios.get(`http://localhost:3000/elderly/meetingsFullDetails/${elderlyId}`)
+        .then(responseMeetings => {
+            console.log("MEETING ARR -",responseMeetings);
+            meetingsArr = responseMeetings.data;
+            })
+        .catch(error => {
+            console.log(error);
+        });
 
-    const meetingDatesArr =[1671919200000,1672005600000]; //getFunction
+        const meetingDatesArr = meetingsArr.map(m => new Date(m.date).getTime());
+        return meetingDatesArr;
+
+    }
 
     const extract = async (dataDateArr, dataType) => {
         let dataArr = []
         let dateArr = []
         let pointsStyleArr = []
         let pointsRadiusArr = []
+        const meetingDatesArr = getMeetingsArr();
         for (let key in dataDateArr) {
             let dataVal = dataDateArr[key].value
-            let date = dataDateArr[key].date
+            let date = new Date(dataDateArr[key].date).getTime();
             console.log("tamar, date in extract :", date );
             dataArr.push(dataVal)
             dateArr.push(stringToDate(date))
