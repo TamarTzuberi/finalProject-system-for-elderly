@@ -40,12 +40,10 @@ function ResearcherPage(props) {
 
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
-
-    // const 
     
     const getAllFeatures = async () => 
     {
-        const allFeaturesFromDB = {steps: [] ,sleeping: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
+        const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
         const elderlyId = 111; //just for now
         const startDate = new Date(start);
         const endDate = new Date(end);
@@ -56,9 +54,9 @@ function ResearcherPage(props) {
         allFeaturesFromDB.steps = responseSteps.data;
     })
     await axios.get(`http://localhost:3000/researcher/features/sleeping/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseSleeping => {
-        console.log("SLEEPING -",responseSleeping);
-        allFeaturesFromDB.sleeping = responseSleeping.data;
+    .then(responseActiveMinutes => {
+        console.log("ACTIVE MINUTES -",responseActiveMinutes);
+        allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
     })
     await axios.get(`http://localhost:3000/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
     .then(responseHr => {
@@ -85,18 +83,25 @@ function ResearcherPage(props) {
     .catch(error => {
         console.log(error);
     });
-
+    // allFeaturesFromDB.steps = arr1;
+    // allFeaturesFromDB.activeMinutes = arr5;
+    // allFeaturesFromDB.hr = arr3;
+    // allFeaturesFromDB.depression = arr2;
+    // allFeaturesFromDB.loneliness = arr2;
+    // allFeaturesFromDB.physicalCondition = arr2;
+    // console.log("NAVIT -" , JSON.stringify(allFeaturesFromDB));
     setAllFeatures(allFeaturesFromDB);
+
 }
 
 
 
-    const result1 = {value: 4000, start: 1671919200000}
-    const result2 = {value: 3500, start: 1672005600000}
-    const result3 = {value: 8000, start: 1672092000000}
-    const arr1 = [result1, result2, result3]
+    // const result1 = {value: 4000, start: 1671919200000}
+    // const result2 = {value: 3500, start: 1672005600000}
+    // const result3 = {value: 8000, start: 1672092000000}
+    // const arr1 = [result1, result2, result3]
 
-    const saveDate = async(e) =>
+    const setDate = async(e) =>
     {
         getAllFeatures();
         //to check valid dates
@@ -111,10 +116,10 @@ function ResearcherPage(props) {
         setShowBarObjective(true);
     }
 
-    const result7 = {value: 85, start: 1671919200000}
-    const result8 = {value: 100, start: 1672005600000}
-    const result9 = {value: 105, start: 1672092000000}
-    const arr3 = [result7, result8, result9]
+    // const result7 = {value: 85, start: 1671919200000}
+    // const result8 = {value: 100, start: 1672005600000}
+    // const result9 = {value: 105, start: 1672092000000}
+    // const arr3 = [result7, result8, result9]
 
     const showHR = async () => {
 
@@ -126,46 +131,19 @@ function ResearcherPage(props) {
 
     }
 
-    const result10 = {value: 8000, start: 1671919200000}
-    const result11 = {value: 6500, start: 1672005600000}
-    const result12 = {value: 10000, start: 1672092000000}
-    const arr4 = [result10, result11, result12]
 
-    const showDistance = async () => {
-        extract(arr4,"obj")
-        setLabelObjective('Distance');
-        setMinObjective(0);
-        setMaxObjective(15000);
-        setShowBarObjective(true);
-
-    }
-
-    const result13 = {value: 50, start: 1671919200000}
-    const result14 = {value: 120, start: 1672005600000}
-    const result15 = {value: 80, start: 1672092000000}
-    const arr5 = [result13, result14, result15]
+    // const result13 = {value: 50, start: 1671919200000}
+    // const result14 = {value: 120, start: 1672005600000}
+    // const result15 = {value: 80, start: 1672092000000}
+    // const arr5 = [result13, result14, result15]
 
     const showAM = async () => {
-        extract(arr5,"obj" )
+        extract(allFeatures.activeMinutes,"obj" )
         setLabelObjective('Active Minutes');
         setMinObjective(0);
         setMaxObjective(300);
         setShowBarObjective(true);
 
-    }
-
-
-    const result4 = {value: 7, start: 1671919200000}
-    const result5 = {value: 4, start: 1672005600000}
-    const result6 = {value: 3, start: 1672092000000}
-    const arr2 = [result4, result5, result6]
-
-    const showSleep = async () => {
-        extract(allFeatures.sleeping, "obj")
-        setLabelObjective('Hours of Sleep');
-        setMinObjective(0);
-        setMaxObjective(10);
-        setShowBarObjective(true);
     }
 
     const showDepression = async () => {
@@ -176,6 +154,7 @@ function ResearcherPage(props) {
         setShowBarSubjective(true);
 
     }
+
     const showLoneliness = async () => {
         extract(allFeatures.loneliness, "sub")
         setLabelSubjective('Lonliness Rate');
@@ -184,7 +163,7 @@ function ResearcherPage(props) {
         setShowBarSubjective(true);
 
     }
-    const showPhysicalCond = async () => {
+    const showPhysicalCondition = async () => {
         extract(allFeatures.physicalCondition, "sub")
         setLabelSubjective('Physical Condition Rate');
         setMinSubjective(0);
@@ -244,6 +223,7 @@ function ResearcherPage(props) {
         setPointsStyle(pointsStyleArr)
         setPointsRadius(pointsRadiusArr)
     }
+
     const contentSubjectiveData = (
         <div className="buttons-section">
         <button
@@ -258,7 +238,7 @@ function ResearcherPage(props) {
         </button>
         <button
             className="sb-btn"
-            onClick={() => showPhysicalCond()}>
+            onClick={() => showPhysicalCondition()}>
             Physical Condition
         </button>
         <br></br>
@@ -292,21 +272,17 @@ function ResearcherPage(props) {
                 onClick={() => showAM()}>
                 Active Minutes
             </button>
-            <button
-                className="sb-btn"
-                onClick={() => showDistance()}>
-                Distance
-            </button>
-            <button
-                className="sb-btn"
-                onClick={() => showSleep()}>
-                Hours of Sleep
-            </button>
             {/* <button
                 className="sb-btn"
                 onClick={() => downloadToCsv()}>
                 הורדת קובץ
             </button> */}
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
             <br></br>
             <button
             className="sb-btn"
@@ -329,7 +305,7 @@ function ResearcherPage(props) {
 
                 </div>
                 <div style={{ top: 20, left: '65%', width: '100px', alignSelf: 'center'}}>
-                <button className='saveButton' onClick={() => saveDate()}>Save Dates</button>
+                <button className='saveButton' onClick={() => setDate()}>Set Dates</button>
 
             </div>
 
