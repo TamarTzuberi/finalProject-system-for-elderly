@@ -44,7 +44,7 @@ function ResearcherPage(props) {
     const getAllFeatures = async () => 
     {
         const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
-        const elderlyId = 111; //just for now
+        const elderlyId = "123569485"; //just for now
         const startDate = new Date(start);
         const endDate = new Date(end);
 
@@ -53,7 +53,7 @@ function ResearcherPage(props) {
         console.log("STEPS -",responseSteps);
         allFeaturesFromDB.steps = responseSteps.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/sleeping/${elderlyId}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/activeMinutes/${elderlyId}/${startDate}/${endDate}`)
     .then(responseActiveMinutes => {
         console.log("ACTIVE MINUTES -",responseActiveMinutes);
         allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
@@ -184,6 +184,7 @@ function ResearcherPage(props) {
     }
 
     const stringToDate = (date) =>{
+        console.log("tamar , type of date:",typeof(date));
         const today = new Date(date);
         const year = today.getFullYear();
         const month = today.getMonth();
@@ -201,7 +202,8 @@ function ResearcherPage(props) {
         let pointsRadiusArr = []
         for (let key in dataDateArr) {
             let dataVal = dataDateArr[key].value
-            let date = dataDateArr[key].start
+            let date = dataDateArr[key].date
+            console.log("tamar, date in extract :", date );
             dataArr.push(dataVal)
             dateArr.push(stringToDate(date))
             if (meetingDatesArr.includes(date)) {
