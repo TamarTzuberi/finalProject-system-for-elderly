@@ -10,6 +10,7 @@ import BarChart from '../charts/BarChart';
 import './ResearcherPage.css';
 // import {hasCookie} from '../CookieManager';
 import Papa from 'papaparse';
+import ShowText from '../dropDownSelection/showText';
 
 
 
@@ -31,6 +32,10 @@ function ResearcherPage(props) {
     const [maxSubjective, setMaxSubjective] = useState(0);
     const [pointsStyle, setPointsStyle] = useState([]);
     const [pointsRadius, setPointsRadius] = useState([]);
+    const [allElderlys, setAllElderlysData] = useState([]);
+    const [elderlyIdChosen, setElderlyId] = useState("");
+    const [elderlyData, setElderlyData] = useState("");
+    const [showElderly, setShowElderly] = useState(false);
     const handleStart = (s) => {
         if (s) {
             setStart(s);
@@ -43,13 +48,62 @@ function ResearcherPage(props) {
         }
     }
 
+    useEffect(() => {
+        handleElderly();
+      }, [elderlyIdChosen]);
+
+    useEffect(() => {
+        getAllElderlys();
+      }, []);
+    
+    const getAllElderlys = async () =>
+    {
+        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        .then(responseAllElderlys => {
+            console.log("ALL ELDERLYS -", responseAllElderlys.data);
+            setAllElderlysData(responseAllElderlys.data)
+            const allElderlysIds = (responseAllElderlys.data).map(e => e.id)
+            setElderlyId(responseAllElderlys.data[0].id)
+            return allElderlysIds;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    const handleElderly = async () =>
+    {
+            console.log("NAVIT ELDERLY ID CHOSE in handle Elderly -",elderlyIdChosen);
+
+            showElderlyData(elderlyIdChosen);
+            getAllFeatures();
+            
+    } 
+
+    const handleSelection = (elderlyId) =>
+    {
+        clearObjectiveData()
+        clearSubjectiveData()
+        setElderlyId(elderlyId)
+    }
+
+    const showElderlyData =  (elderlyId) =>
+    {
+        console.log("ELDERLY ID IN SHOW - ", elderlyId)
+        const data = allElderlys.find(item => item.id === elderlyId);
+
+        setElderlyData(data);
+        setShowElderly(true);
+
+    }
+
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
     
     const getAllFeatures = async () => 
     {
         const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
-        const elderlyId = "123569485"; //just for now
+        const elderlyId = elderlyIdChosen; //just for now
         const startDate = new Date(start);
         const endDate = new Date(end);
 
@@ -208,7 +262,7 @@ function ResearcherPage(props) {
 
 
     const downloadToCsv = async () => {
-        const elderlyId = "123569485";
+        const elderlyId = elderlyIdChosen;
         let rows = [];
         rows.push(['Date', 'Steps', 'Heart_Rate', 'Active_Minutes', 'Depression', 'Loneliness', 'Physical Condition'])
         for (let day = 0; day < allFeatures.steps.length; day++) {
@@ -235,7 +289,7 @@ function ResearcherPage(props) {
 
     const getAllMeetings = async () =>
     {
-        const elderlyId = "123569485";
+        const elderlyId = elderlyIdChosen;
         let meetingsArr = [];
         await axios.get(`http://localhost:3000/elderly/meetingsFullDetails/${elderlyId}`)
         .then(responseMeetings => {
@@ -362,15 +416,32 @@ function ResearcherPage(props) {
                 </div>
                 <div style={{ top: 20, left: '65%', width: '100px', alignSelf: 'center'}}>
                 <button className='saveButton' onClick={() => setDate()}>Set Dates</button>
-
             </div>
-
+            <div>
+                    <select value={elderlyIdChosen} onChange={e => handleSelection(e.target.value)}>
+                    {
+                        allElderlys.map((option) => (
+                     <option key={option.id} value={option.id}>
+                     {option.id}
+                    </option>
+          ))}
+                    </select>
+                </div>
                 <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '70px'}}>
-                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius} showLegendObjective={showLegendObjective} showLegendSubjective={showLegendSubjective}/>}
+                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius}/>}
                 </div> 
+                {/* <div style={{position: 'absolute'}}>
+                    {showElderly &&
+                    <ShowText data={elderlyData}/>}
+                </div> */}
             </div>  
              <div className="rightContainer">
             <Sidebar history={props.history} content={contentSubjectiveData} />
+            <br></br>
+            <div style={{position: 'absolute'}}>
+                    {showElderly &&
+                    <ShowText data={elderlyData}/>}
+                </div>
             </div>
         </div>
     );

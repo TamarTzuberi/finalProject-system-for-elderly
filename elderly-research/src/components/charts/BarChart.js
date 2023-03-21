@@ -46,9 +46,6 @@ const BarChart = (props) => {
                 yAxisID: 'A',
                 pointStyle: 'circle',
                 pointRadius: 2,
-                legend: {
-                    display: props.showLegendObjective
-                },
             },
             {
                 label: props.labelSubjective,
@@ -60,9 +57,6 @@ const BarChart = (props) => {
                 yAxisID: 'B',
                 pointStyle: props.pointsStyle,
                 pointRadius: props.pointsRadius,
-                legend: {
-                    display: props.showLegendSubjective
-                },
 
             }
         ]
@@ -74,14 +68,6 @@ const BarChart = (props) => {
             <Bar style={{ textAlign: 'center' }}
                 data={state}
                 options={{
-                    plugins:{
-                        A : {
-                            legend:{
-                                display: props.showLegendObjective,
-                            },
-                            
-                        },
-                    },
                     title: {
                         display: true,
                         fontSize: 20
@@ -114,20 +100,6 @@ const BarChart = (props) => {
             <Line style={{ textAlign: 'center' }}
                 data={state}
                 options={{
-                    // plugins:{
-                    //     A : {
-                    //     legend:{
-                    //         display: props.showLegendObjective,
-                    //     },
-                        
-                    // },
-                    // B : {
-                    //     legend:{
-                    //         display: props.showLegendSubjective,
-                    //     },
-                        
-                    // }
-                    // },
                     title: {
                         display: true,
                         fontSize: 20

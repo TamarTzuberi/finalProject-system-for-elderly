@@ -1,7 +1,7 @@
 .sidebar {
     background: white;
     width: 280px;
-    height: 65vh;
+    height: 50vh;
     display: flex;
     flex-direction: column;
     text-align: center; 
