@@ -11,7 +11,7 @@ export default class App extends React.Component<{}> {
         <div className="centreText">
           {/* React components must have a wrapper node/element */}
           <h1>Elderly</h1>
-          <Link to="/ResearcherPage">
+          <Link to="/LoginPage">
             <button>
               Start Research
             </button>

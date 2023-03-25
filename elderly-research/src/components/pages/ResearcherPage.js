@@ -75,6 +75,7 @@ function ResearcherPage(props) {
     {
             console.log("NAVIT ELDERLY ID CHOSE in handle Elderly -",elderlyIdChosen);
 
+            setElderlyData(elderlyIdChosen)
             showElderlyData(elderlyIdChosen);
             getAllFeatures();
             
@@ -90,7 +91,8 @@ function ResearcherPage(props) {
     const showElderlyData =  (elderlyId) =>
     {
         console.log("ELDERLY ID IN SHOW - ", elderlyId)
-        const data = allElderlys.find(item => item.id === elderlyId);
+        const allData = allElderlys.find(item => item.id === elderlyId);
+        const data = {"Gender": allData["gender"], "Birth Year": allData["birthYear"], "City": allData["city"]}
 
         setElderlyData(data);
         setShowElderly(true);
@@ -412,11 +414,17 @@ function ResearcherPage(props) {
                 <div style={{ top: 20, left: '65%', width: '100px', backgroundColor: 'white', marginRight: '150px'}}>
                     <input type='date' className='start' value={start} onChange={e => handleStart(e.target.value)} />
                     <input type='date' className='end' value={end} onChange={e => handleEnd(e.target.value)} />
-
                 </div>
                 <div style={{ top: 20, left: '65%', width: '100px', alignSelf: 'center'}}>
                 <button className='saveButton' onClick={() => setDate()}>Set Dates</button>
             </div>
+                <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '70px'}}>
+                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius}/>}
+                </div> 
+            </div>  
+             <div className="rightContainer">
+            <Sidebar history={props.history} content={contentSubjectiveData} />
+            <br></br>
             <div>
                     <select value={elderlyIdChosen} onChange={e => handleSelection(e.target.value)}>
                     {
@@ -427,17 +435,6 @@ function ResearcherPage(props) {
           ))}
                     </select>
                 </div>
-                <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '70px'}}>
-                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius}/>}
-                </div> 
-                {/* <div style={{position: 'absolute'}}>
-                    {showElderly &&
-                    <ShowText data={elderlyData}/>}
-                </div> */}
-            </div>  
-             <div className="rightContainer">
-            <Sidebar history={props.history} content={contentSubjectiveData} />
-            <br></br>
             <div style={{position: 'absolute'}}>
                     {showElderly &&
                     <ShowText data={elderlyData}/>}
