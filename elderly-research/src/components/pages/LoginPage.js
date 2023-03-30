@@ -2,6 +2,7 @@ import { Link, Redirect } from 'react-router-dom';
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import './LoginPage.css';
+import axios, { all } from 'axios';
 
 
 function LoginPage(props) {
@@ -26,27 +27,35 @@ function LoginPage(props) {
     pass: "invalid password"
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     //Prevent page reload
     event.preventDefault();
 
     var { uname, pass } = document.forms[0];
+    var isLoggedInUser = false;
+    console.log(uname.value);
 
     // Find user login info
-    const userData = database.find((user) => user.username === uname.value);
+    await axios.post(`http://localhost:3000/users/login/`, {
+        username: uname.value,
+        password: pass.value
+      })
+        .then(isLoggedIn => {
+            console.log("isLoggedIn -",isLoggedIn);
+            isLoggedInUser = isLoggedIn.data;
+            console.log(isLoggedInUser);
+            })
+        .catch(error => {
+            console.log(error);
+        });
 
     // Compare user info
-    if (userData) {
-      if (userData.password !== pass.value) {
-        // Invalid password
-        setErrorMessages({ name: "pass", message: errors.pass });
-      } else {
-        setIsSubmitted(true);
-      }
+    if (!isLoggedInUser) {
+      // Invalid password
+      setErrorMessages({ name: "pass", message: errors.pass });
     } else {
-      // Username not found
-      setErrorMessages({ name: "uname", message: errors.uname });
-    }
+      setIsSubmitted(true);
+};
   };
 
   // Generate JSX code for error message
