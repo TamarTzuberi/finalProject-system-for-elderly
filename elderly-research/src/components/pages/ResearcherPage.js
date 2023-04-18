@@ -170,7 +170,6 @@ function ResearcherPage(props) {
     }
 
     const showSteps = async (e) => {
-  
         extract(allFeatures.steps,"obj")
         setLabelObjective('Steps');
         setShowLegendObjective(true);
@@ -185,14 +184,12 @@ function ResearcherPage(props) {
     // const arr3 = [result7, result8, result9]
 
     const showHR = async () => {
-
         extract(allFeatures.hr,"obj")
         setLabelObjective('HR');
         setShowLegendObjective(true);
         setMinObjective(0);
         setMaxObjective(130);
         setShowBarObjective(true);
-
     }
 
 
@@ -208,7 +205,6 @@ function ResearcherPage(props) {
         setMinObjective(0);
         setMaxObjective(300);
         setShowBarObjective(true);
-
     }
 
     const showDepression = async () => {
@@ -218,7 +214,6 @@ function ResearcherPage(props) {
         setMinSubjective(0);
         setMaxSubjective(10);
         setShowBarSubjective(true);
-
     }
 
     const showLoneliness = async () => {
@@ -227,8 +222,7 @@ function ResearcherPage(props) {
         setShowLegendSubjective(true);
         setMinSubjective(0);
         setMaxSubjective(10);
-        setShowBarSubjective(true);
-
+        setShowBarSubjective(true);        
     }
     const showPhysicalCondition = async () => {
         extract(allFeatures.physicalCondition, "sub")
@@ -288,7 +282,6 @@ function ResearcherPage(props) {
         link.click();
     }
 
-
     const getAllMeetings = async () =>
     {
         const elderlyId = elderlyIdChosen;
@@ -332,9 +325,15 @@ function ResearcherPage(props) {
         if (dataType === 'sub'){
             setDataSubjective(dataArr)
         }
-        setLabels(dateArr)
-        setPointsStyle(pointsStyleArr)
-        setPointsRadius(pointsRadiusArr)
+        if (dataDateArr.length === 0){
+            alert("There is no data on the selected dates")
+        }
+        else{
+            setLabels(dateArr)
+            setPointsStyle(pointsStyleArr)
+            setPointsRadius(pointsRadiusArr)
+        }
+
     }
 
     const contentSubjectiveData = (
@@ -425,7 +424,7 @@ function ResearcherPage(props) {
              <div className="rightContainer">
             <Sidebar history={props.history} content={contentSubjectiveData} />
             <br></br>
-            <div>
+            <div style={{backgroundColor: '#f9f9f9'}}>
                     <select value={elderlyIdChosen} onChange={e => handleSelection(e.target.value)}>
                     {
                         allElderlys.map((option) => (
@@ -435,7 +434,7 @@ function ResearcherPage(props) {
           ))}
                     </select>
                 </div>
-            <div style={{position: 'absolute'}}>
+            <div className="elderlyData" style={{position: 'absolute'}}>
                     {showElderly &&
                     <ShowText data={elderlyData}/>}
                 </div>
