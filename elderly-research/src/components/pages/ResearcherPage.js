@@ -36,6 +36,8 @@ function ResearcherPage(props) {
     const [elderlyIdChosen, setElderlyId] = useState("");
     const [elderlyData, setElderlyData] = useState("");
     const [showElderly, setShowElderly] = useState(false);
+    const [datesArray, setDatesArray] = useState([]);
+
     const handleStart = (s) => {
         if (s) {
             setStart(s);
@@ -55,6 +57,10 @@ function ResearcherPage(props) {
     useEffect(() => {
         getAllElderlys();
       }, []);
+
+      useEffect(() => {
+        datesArr();
+      }, [allFeatures]);
     
     const getAllElderlys = async () =>
     {
@@ -105,10 +111,10 @@ function ResearcherPage(props) {
     const getAllFeatures = async () => 
     {
         const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
-        const elderlyId = elderlyIdChosen; //just for now
+        const elderlyId = elderlyIdChosen;
         const startDate = new Date(start);
         const endDate = new Date(end);
-
+        
     await axios.get(`http://localhost:3000/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
     .then(responseSteps => {
         console.log("STEPS -",responseSteps);
@@ -139,7 +145,6 @@ function ResearcherPage(props) {
         console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
         allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
-        console.log("ALL FEATURES FROM DB -", allFeaturesFromDB)
     })
     .catch(error => {
         console.log(error);
@@ -155,6 +160,43 @@ function ResearcherPage(props) {
 
 }
 
+    const minDate = async () =>{
+        let minD = new Date();
+
+        for (const key in allFeatures) {
+            const arr = allFeatures[key];
+
+            if (Array.isArray(arr) && arr.length > 0) {
+                const a = arr.map(item => new Date(item.date));
+                const min = new Date(Math.min(...a));
+                if (min < minD) {
+                    minD = min;
+                }
+            }
+        }
+        return minD.toISOString();
+
+    }
+
+    const maxDate = async () => {
+    const arrOfMaxDates = [];
+    
+    for (const key in allFeatures) {
+        const arr = allFeatures[key];
+        console.log("ARR= ", arr)
+        if (Array.isArray(arr) && arr.length > 0) {
+            const a = arr.map(item => new Date(item.date));
+            const max = new Date(Math.max(...a));
+            arrOfMaxDates.push(max);
+            // if (max < maxDate) {
+            //     maxDate = max;
+            // }
+        }
+    }
+    const maxD = new Date(Math.max(...arrOfMaxDates));
+    return maxD.toISOString();
+
+}
 
 
     // const result1 = {value: 4000, start: 1671919200000}
@@ -162,11 +204,25 @@ function ResearcherPage(props) {
     // const result3 = {value: 8000, start: 1672092000000}
     // const arr1 = [result1, result2, result3]
 
-    const setDate = async(e) =>
+    const setDates = async(e) =>
     {
+
         getAllFeatures();
         getAllMeetings();
-        //to check valid dates
+
+    }
+
+    const datesArr = async() => {
+        const newDates = [];
+        const min = await minDate();
+        const max = await maxDate();
+        const startDate = new Date(min);
+        const endDate = new Date(max);
+        for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+            newDates.push(d.getTime());
+            }
+            setDatesArray(newDates);
+
     }
 
     const showSteps = async (e) => {
@@ -301,15 +357,29 @@ function ResearcherPage(props) {
     }
 
     const extract = async (dataDateArr, dataType) => {
+        // console.log("DATES IN EXTRACT: ", dataDateArr);
         let dataArr = []
         let dateArr = []
         let pointsStyleArr = []
         let pointsRadiusArr = []
+        console.log("DATES IN EXTRACT: ", datesArray);
+
+        for (let key1 in datesArray) {
+            console.log("1: ", key1);
+            console.log("date n.1: ", datesArray[key1]);
+            dateArr.push(stringToDate(datesArray[key1]))
+        }
         for (let key in dataDateArr) {
-            let dataVal = dataDateArr[key].value
+            let dataVal = dataDateArr[key].value;
             let date = new Date(dataDateArr[key].date).getTime();
-            dataArr.push(dataVal)
-            dateArr.push(stringToDate(date))
+            if (datesArray.includes(date)){
+                dataArr.push(dataVal)
+                // dateArr.push(stringToDate(date))
+            }
+            else{
+                dataArr.push(0)
+                // dateArr.push(stringToDate(date))
+            }
             if (allMeetings.includes(date)) {
                 pointsStyleArr.push('star')
                 pointsRadiusArr.push(10)
@@ -319,6 +389,8 @@ function ResearcherPage(props) {
                 pointsRadiusArr.push(2)
             }
         }
+
+        // console.log("DATE ARR FORMAT: ", dataArr)
         if (dataType ==='obj') {
             setDataObjective(dataArr)
         }
@@ -415,7 +487,7 @@ function ResearcherPage(props) {
                     <input type='date' className='end' value={end} onChange={e => handleEnd(e.target.value)} />
                 </div>
                 <div style={{ top: 20, left: '65%', width: '100px', alignSelf: 'center'}}>
-                <button className='saveButton' onClick={() => setDate()}>Set Dates</button>
+                <button className='saveButton' onClick={() => setDates()}>Set Dates</button>
             </div>
                 <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '70px'}}>
                     {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} pointsStyle={pointsStyle} pointsRadius={pointsRadius}/>}
