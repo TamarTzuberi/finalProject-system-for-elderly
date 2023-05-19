@@ -10,13 +10,13 @@ import BarChart from '../charts/BarChart';
 import './ResearcherPage.css';
 // import {hasCookie} from '../CookieManager';
 import Papa from 'papaparse';
-import ShowText from '../dropDownSelection/showText';
 import { Redirect } from 'react-router-dom';
+// import { validateHeaderName } from 'http';
 
 
 
 
-function ResearcherPage(props) {
+function DemographicPage(props) {
     const [showBarObjective, setShowBarObjective] = useState(false);
     const [allFeatures, setAllFeatures] = useState();
     // const [allMeetings, setAllMeetings] = useState();
@@ -35,10 +35,18 @@ function ResearcherPage(props) {
     // const [pointsStyle, setPointsStyle] = useState([]);
     // const [pointsRadius, setPointsRadius] = useState([]);
     const [allElderlys, setAllElderlysData] = useState([]);
-    const [elderlyIdChosen, setElderlyId] = useState("");
-    const [elderlyData, setElderlyData] = useState("");
-    const [showElderly, setShowElderly] = useState(false);
+    // const [elderlyIdChosen, setElderlyId] = useState("");
+    // const [elderlyData, setElderlyData] = useState("");
+    // const [showElderly, setShowElderly] = useState(false);
     const [datesArray, setDatesArray] = useState([]);
+    // const [allCites, setAllCitiesData] = useState([]);
+    const [cityChosen, setCity] = useState("");
+    const [genderChosen, setGender] = useState("");
+    // const [ageChosen, setAge] = useState("");
+    const [cityData, setCityData] = useState("");
+    const [genderData, setGenderData] = useState("");
+    // const [ageData, setAgeData] = useState("");
+    // const [showCity, setShowCity] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -60,9 +68,9 @@ function ResearcherPage(props) {
         }
     }
 
-    useEffect(() => {
-        handleElderly();
-      }, [elderlyIdChosen]);
+    // useEffect(() => {
+    //     handleElderly();
+    //   }, [elderlyIdChosen]);
 
     useEffect(() => {
         getAllElderlys();
@@ -72,6 +80,25 @@ function ResearcherPage(props) {
         datesArr();
       }, [allFeatures]);
 
+      useEffect(() => {
+        handleCity();
+      }, [cityChosen]);
+
+      useEffect(() => {
+        handleGender();
+      }, [genderChosen]);
+
+    //   useEffect(() => {
+    //     handleAge();
+    //   }, [ageChosen]);
+
+    useEffect(() => {
+        getAllCities();
+      }, []);
+
+      useEffect(() => {
+        getAllGenders();
+      }, []);
     
     const getAllElderlys = async () =>
     {
@@ -80,7 +107,6 @@ function ResearcherPage(props) {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
             setAllElderlysData(responseAllElderlys.data)
             const allElderlysIds = (responseAllElderlys.data).map(e => e.elderlyNum)
-            setElderlyId(responseAllElderlys.data[0].elderlyNum)
             return allElderlysIds;
         })
         .catch(error => {
@@ -88,70 +114,125 @@ function ResearcherPage(props) {
         });
     }
 
-    const handleElderly = async () =>
+    const getAllCities = async () =>
     {
-            console.log("NAVIT ELDERLY ID CHOSE in handle Elderly -",elderlyIdChosen);
+        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        .then(responseAllElderlys => {
+            console.log("ALL ELDERLYS -", responseAllElderlys.data);
+            const allCities = (responseAllElderlys.data).map(e => e.city)
+            setCity(responseAllElderlys.data[0].city)
+            return allCities;
+        })
+        .catch(error => {
+            console.log(error);
+        });
 
-            setElderlyData(elderlyIdChosen)
-            showElderlyData(elderlyIdChosen);
+    }
+
+    const getAllGenders = async () =>
+    {
+        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        .then(responseAllElderlys => {
+            console.log("ALL ELDERLYS -", responseAllElderlys.data);
+            const allGenders = (responseAllElderlys.data).map(e => e.gender)
+            setGender(responseAllElderlys.data[0].gender)
+            return allGenders;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    }
+
+    const handleCity = async () =>
+    {
+            console.log("STAV CITY CHOSEN in handle city -", cityChosen);
+
+            setCityData(cityChosen);
+            // showCityData(cityChosen);
             getAllFeatures();
             
     } 
 
-    const handleSelection = (elderlyId) =>
+    const handleGender = async () =>
     {
-        clearObjectiveData()
-        clearSubjectiveData()
-        setElderlyId(elderlyId)
+            console.log("STAV GENDER CHOSEN in handle gender -", genderChosen);
+
+            setGenderData(genderChosen);
+            // showGenderData(genderChosen);
+            getAllFeatures();
+            
+    } 
+    
+    // const handleAge = async () =>
+    // {
+    //         console.log("STAV Age CHOSEN in handle gender -", genderChosen);
+
+    //         setGenderData(ageChosen);
+    //         // showGenderData(genderChosen);
+    //         getAllFeatures();
+            
+    // } 
+
+    const handleSelectionCity = (cityName) =>
+    {
+        clearObjectiveData();
+        clearSubjectiveData();
+        setCity(cityName);
     }
 
-    const showElderlyData =  (elderlyId) =>
+    const handleSelectionGender = (gender) =>
     {
-        console.log("ELDERLY ID IN SHOW - ", elderlyId)
-        const allData = allElderlys.find(item => item.elderlyNum === elderlyId);
-        const data = {"Gender": allData["gender"], "Birth Year": allData["birthYear"], "City": allData["city"]}
-
-        setElderlyData(data);
-        setShowElderly(true);
-
+        clearObjectiveData();
+        clearSubjectiveData();
+        setGender(gender);
     }
+
+    // const handleSelectionAge = (age) =>
+    // {
+    //     clearObjectiveData();
+    //     clearSubjectiveData();
+    //     setAge(age);
+    // }
 
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
+
     
     const getAllFeatures = async () => 
     {
         const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
-        const elderlyId = elderlyIdChosen;
+        const city = cityChosen;
+        const gender = genderChosen;
         const startDate = new Date(start);
         const endDate = new Date(end);
-        
-    await axios.get(`http://localhost:3000/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
+
+    await axios.get(`http://localhost:3000/researcher/features/${"Steps"}/${city}/${gender}/${startDate}/${endDate}`)
     .then(responseSteps => {
         console.log("STEPS -",responseSteps);
         allFeaturesFromDB.steps = responseSteps.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/activeMinutes/${elderlyId}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"ActiveMinutes"}/${city}/${gender}/${startDate}/${endDate}`)
     .then(responseActiveMinutes => {
         console.log("ACTIVE MINUTES -",responseActiveMinutes);
         allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"HR"}/${city}/${gender}/${startDate}/${endDate}`)
     .then(responseHr => {
         console.log("HR -",responseHr);
         allFeaturesFromDB.hr = responseHr.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/loneliness/${elderlyId}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"Loneliness"}/${city}/${gender}/${startDate}/${endDate}`)
     .then(responseLonliness => {
         console.log("LONLINESS -",responseLonliness);
         allFeaturesFromDB.loneliness = responseLonliness.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/depression/${elderlyId}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"Depression"}/${city}/${gender}/${startDate}/${endDate}`)
     .then(responseDepression => {
         console.log("DEPRESSION -",responseDepression);
         allFeaturesFromDB.depression = responseDepression.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/physicalCondition/${elderlyId}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"PhysicalCondition"}/${city}/${gender}/${startDate}/${endDate}`)
     .then(responsePhysicalCondition => {
         console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
         allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
@@ -160,14 +241,12 @@ function ResearcherPage(props) {
     .catch(error => {
         console.log(error);
     });
-
     setAllFeatures(allFeaturesFromDB);
-    console.log("STAV GET ALL FEATURES=", allFeaturesFromDB)
+    return allFeaturesFromDB;
 
 }
 
-    const minDate = async () =>
-    {
+    const minDate = async () =>{
         let minD = new Date();
 
         for (const key in allFeatures) {
@@ -185,10 +264,8 @@ function ResearcherPage(props) {
 
     }
 
-    const maxDate = async () => 
-    {
+    const maxDate = async () => {
         const arrOfMaxDates = [];
-        
         for (const key in allFeatures) {
             const arr = allFeatures[key];
             console.log("ARR= ", arr)
@@ -203,12 +280,10 @@ function ResearcherPage(props) {
 
     }
 
+
     const setDates = async(e) =>
     {
-
         getAllFeatures();
-        // getAllMeetings();
-
     }
 
     const datesArr = async() => {
@@ -225,6 +300,7 @@ function ResearcherPage(props) {
     }
 
     const showSteps = async (e) => {
+        console.log("STAV ALL:::",allFeatures.steps);
         extract(allFeatures.steps,"obj")
         setLabelObjective('Steps');
         setShowLegendObjective(true);
@@ -232,6 +308,7 @@ function ResearcherPage(props) {
         setMaxObjective(10000);
         setShowBarObjective(true);
     }
+
 
     const showHR = async () => {
         extract(allFeatures.hr,"obj")
@@ -241,6 +318,7 @@ function ResearcherPage(props) {
         setMaxObjective(130);
         setShowBarObjective(true);
     }
+
 
     const showAM = async () => {
         extract(allFeatures.activeMinutes,"obj" )
@@ -300,11 +378,49 @@ function ResearcherPage(props) {
         return dateString
     }
 
+    const extract = async (dataDateArr, dataType) => {
+        // console.log("DATES IN EXTRACT: ", dataDateArr);
+        let dataArr = []
+        let dateArr = []
+        console.log("DATES IN EXTRACT: ", datesArray);
+
+        for (let key1 in datesArray) {
+            dateArr.push(stringToDate(datesArray[key1]))
+        }
+        for (let key in dataDateArr) {
+            let dataVal = dataDateArr[key].value;
+            let date = new Date(dataDateArr[key].date).getTime();
+            if (datesArray.includes(date)){
+                dataArr.push(dataVal)
+                // dateArr.push(stringToDate(date))
+            }
+            else{
+                dataArr.push(0)
+                // dateArr.push(stringToDate(date))
+            }
+        }
+
+        // console.log("DATE ARR FORMAT: ", dataArr)
+        if (dataType ==='obj') {
+            setDataObjective(dataArr)
+        }
+        if (dataType === 'sub'){
+            setDataSubjective(dataArr)
+        }
+        if (dataDateArr.length === 0){
+            alert("There is no data on the selected dates")
+        }
+        else{
+            setLabels(dateArr)
+        }
+
+    }
 
     const downloadToCsv = async () => {
-        const elderlyId = elderlyIdChosen;
+        const cityName = cityChosen;
+        const gender = genderChosen;
         let rows = [];
-        rows.push(['Date', 'Steps', 'Heart_Rate', 'Active_Minutes', 'Depression', 'Loneliness', 'Physical Condition'])
+        rows.push(['Date', 'Average Steps', 'Average Heart_Rate', 'Average Active_Minutes', 'Average Depression', 'Average Loneliness', 'Average Physical Condition'])
         for (let day = 0; day < allFeatures.steps.length; day++) {
             let date = allFeatures.steps[day].date;
             let step = allFeatures.steps[day] ? allFeatures.steps[day].value : "no data";
@@ -321,89 +437,17 @@ function ResearcherPage(props) {
         const csvData = encodeURI(csv);
         const link = document.createElement('a');
         link.href = 'data:text/csv;charset=utf-8,' + csvData;
-        link.download = `${elderlyId}_data.csv`;;
+        link.download = `${cityName}_${gender}_data.csv`;
         document.body.appendChild(link);
         link.click();
     }
 
-    // const getAllMeetings = async () =>
-    // {
-    //     const elderlyId = elderlyIdChosen;
-    //     let meetingsArr = [];
-    //     await axios.get(`http://localhost:3000/elderly/meetingsFullDetails/${elderlyId}`)
-    //     .then(responseMeetings => {
-    //         console.log("MEETING ARR -",responseMeetings);
-    //         meetingsArr = responseMeetings.data;
-    //         })
-    //     .catch(error => {
-    //         console.log(error);
-    //     });
-
-    //     const meetingDatesArr = meetingsArr.map(m => new Date(m.date).getTime());
-    //     console.log("MEETING:",meetingDatesArr)
-    //     setAllMeetings(meetingDatesArr);
-
-    // }
-
-    const extract = async (dataDateArr, dataType) => {
-        // console.log("DATES IN EXTRACT: ", dataDateArr);
-        let dataArr = []
-        let dateArr = []
-        // let pointsStyleArr = []
-        // let pointsRadiusArr = []
-        console.log("DATES IN EXTRACT: ", datesArray);
-
-        for (let key1 in datesArray) {
-            // console.log("1: ", key1);
-            // console.log("date n.1: ", datesArray[key1]);
-            dateArr.push(stringToDate(datesArray[key1]))
-        }
-        for (let key in dataDateArr) {
-            let dataVal = dataDateArr[key].value;
-            let date = new Date(dataDateArr[key].date).getTime();
-            console.log("DATE:",date)
-            if (datesArray.includes(date)){
-                dataArr.push(dataVal)
-                // dateArr.push(stringToDate(date))
-            }
-            else{
-                dataArr.push(0)
-                // dateArr.push(stringToDate(date))
-            }
-            // if (allMeetings.includes(date)) {
-            //     pointsStyleArr.push('star')
-            //     pointsRadiusArr.push(10)
-            // }
-            // else {
-            //     pointsStyleArr.push('circle')
-            //     pointsRadiusArr.push(2)
-            // }
-        }
-
-        // console.log("DATE ARR FORMAT: ", dataArr)
-        if (dataType ==='obj') {
-            setDataObjective(dataArr)
-        }
-        if (dataType === 'sub'){
-            setDataSubjective(dataArr)
-        }
-        if (dataDateArr.length === 0){
-            alert("There is no data on the selected dates")
-        }
-        else{
-            setLabels(dateArr)
-            // setPointsStyle(pointsStyleArr)
-            // setPointsRadius(pointsRadiusArr)
-        }
-
-    }
-
     const handleButtonClick = () => {
         setIsSubmitted(true);
-    };
+      };
 
     if (isSubmitted) {
-        return <Redirect to="/DemographicPage" />;
+        return <Redirect to="/ResearcherPage" />;
     }
 
     const contentSubjectiveData = (
@@ -438,7 +482,6 @@ function ResearcherPage(props) {
         </button>
         </div>
     )
-
     const contentObjectiveData = (
         <div className="buttons-section">
             <h2>Objective Parameters</h2>
@@ -489,7 +532,7 @@ function ResearcherPage(props) {
                 <button className='saveButton' onClick={() => setDates()}>Set Dates</button>
             </div>
                 <div style={{ position: "absolute", top: '100px', left: '25%', height: '50%', width: '40%',backgroundColor: 'white', marginLeft: '70px', marginTop: '0px'}}>
-                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective}/>}
+                    {(showBarObjective || showBarSubjective) && <BarChart dataObjective={dataObjective} dataSubjective={dataSubjective} labelObjective={labelObjective} labelSubjective={labelSubjective} labels={labels} minObjective={minObjective} maxObjective={maxObjective} minSubjective={minSubjective} maxSubjective={maxSubjective} />}
                 </div> 
             </div>  
              <div className="rightContainer">
@@ -497,29 +540,45 @@ function ResearcherPage(props) {
                     <button onClick={e=>handleDropdownFocus(open)}>Other options</button>
                     {open && (
                         <ul>
-                            <li onClick={handleButtonClick}>Demographic information</li>
+                            <li onClick={handleButtonClick}>Personal information</li>
                         </ul>
                     )}
                 </div>
-            <Sidebar history={props.history} content={contentSubjectiveData} />
-            <br></br>
-            <div style={{backgroundColor: '#f9f9f9', textAlign: 'center'}} >
-                    <select value={elderlyIdChosen} onChange={e => handleSelection(e.target.value)}>
-                    {
-                        allElderlys.map((option) => (
-                     <option key={option.elderlyNum} value={option.elderlyNum}>
-                     {option.elderlyNum}
-                    </option>
-          ))}
+                <Sidebar history={props.history} content={contentSubjectiveData} />
+                <br></br>
+                <div style={{backgroundColor: '#f9f9f9', fontWeight: 'bold', textAlign: 'center'}}>City: 
+                    <select value={cityChosen} onChange={e => handleSelectionCity(e.target.value)}>
+                        {[...new Set(allElderlys.map(option => option.city))].map(city => (
+                        <option key={city} value={city}>
+                            {city}
+                        </option>
+                        ))}
+                        <option>{"All"}</option>
                     </select>
                 </div>
-            <div className="elderlyData" style={{position: 'absolute'}}>
-                    {showElderly &&
-                    <ShowText data={elderlyData}/>}
+                <div style={{backgroundColor: '#f9f9f9', fontWeight: 'bold', textAlign: 'center'}}>Gender: 
+                    <select value={genderChosen} onChange={e => handleSelectionGender(e.target.value)}>
+                        {[...new Set(allElderlys.map(option => option.gender))].map(gender => (
+                        <option key={gender} value={gender}>
+                            {gender}
+                        </option>
+                        ))}
+                        <option>{"All"}</option>
+                    </select>
                 </div>
+                {/* <div style={{backgroundColor: '#f9f9f9', fontWeight: 'bold', textAlign: 'center'}}>Age: 
+                    <select value={ageChosen} onChange={e => handleSelectionAge(e.target.value)}>
+                        {[...new Set(allElderlys.map(option => option.birthYear))].map(age => (
+                        <option key={age} value={age}>
+                            {age}
+                        </option>
+                        ))}
+                        <option>{"All"}</option>
+                    </select>
+                </div> */}
             </div>
         </div>
     );
 }
 
-export default ResearcherPage;
+export default DemographicPage;
