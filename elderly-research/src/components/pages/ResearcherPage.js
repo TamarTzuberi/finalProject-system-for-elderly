@@ -121,7 +121,7 @@ function ResearcherPage(props) {
     
     const getAllFeatures = async () => 
     {
-        const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [] }
+        const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [], sleeping: [] }
         const elderlyId = elderlyIdChosen;
         const startDate = new Date(start);
         const endDate = new Date(end);
@@ -155,6 +155,12 @@ function ResearcherPage(props) {
     .then(responsePhysicalCondition => {
         console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
         allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
+
+    })
+    await axios.get(`http://localhost:3000/researcher/features/sleep/${elderlyId}/${startDate}/${endDate}`)
+    .then(responseSleeping => {
+        console.log("SLEEPING -",responseSleeping);
+        allFeaturesFromDB.sleeping = responseSleeping.data;
 
     })
     .catch(error => {
@@ -256,7 +262,7 @@ function ResearcherPage(props) {
         setLabelSubjective('Depression Rate');
         setShowLegendSubjective(true);
         setMinSubjective(0);
-        setMaxSubjective(10);
+        setMaxSubjective(5);
         setShowBarSubjective(true);
     }
 
@@ -265,15 +271,25 @@ function ResearcherPage(props) {
         setLabelSubjective('Lonliness Rate');
         setShowLegendSubjective(true);
         setMinSubjective(0);
-        setMaxSubjective(10);
+        setMaxSubjective(5);
         setShowBarSubjective(true);        
     }
+
     const showPhysicalCondition = async () => {
         extract(allFeatures.physicalCondition, "sub")
         setLabelSubjective('Physical Condition Rate');
         setShowLegendSubjective(true);
         setMinSubjective(0);
-        setMaxSubjective(10);
+        setMaxSubjective(5);
+        setShowBarSubjective(true);
+    }
+
+    const showSleeping = async () => {
+        extract(allFeatures.sleeping, "sub")
+        setLabelSubjective('Sleeping Rate');
+        setShowLegendSubjective(true);
+        setMinSubjective(0);
+        setMaxSubjective(5);
         setShowBarSubjective(true);
     }
 
@@ -304,7 +320,7 @@ function ResearcherPage(props) {
     const downloadToCsv = async () => {
         const elderlyId = elderlyIdChosen;
         let rows = [];
-        rows.push(['Date', 'Steps', 'Heart_Rate', 'Active_Minutes', 'Depression', 'Loneliness', 'Physical Condition'])
+        rows.push(['Date', 'Steps', 'Heart_Rate', 'Active_Minutes', 'Depression', 'Loneliness', 'Physical Condition', 'Sleeping'])
         for (let day = 0; day < allFeatures.steps.length; day++) {
             let date = allFeatures.steps[day].date;
             let step = allFeatures.steps[day] ? allFeatures.steps[day].value : "no data";
@@ -313,7 +329,8 @@ function ResearcherPage(props) {
             let dep = allFeatures.depression[day] ? allFeatures.depression[day].value : "no data";
             let lonliness = allFeatures.loneliness[day] ? allFeatures.loneliness[day].value : "no data";
             let physicalCond = allFeatures.physicalCondition[day] ? allFeatures.physicalCondition[day].value : "no data";
-            rows.push([date, step + '', hr + '', am + '', dep + '', lonliness + '', physicalCond + '']);
+            let sleeping = allFeatures.sleeping[day] ? allFeatures.sleeping[day].value : "no data";
+            rows.push([date, step + '', hr + '', am + '', dep + '', lonliness + '', physicalCond + '', sleeping + '']);
 
         }
 
@@ -424,9 +441,11 @@ function ResearcherPage(props) {
             onClick={() => showPhysicalCondition()}>
             Physical Condition
         </button>
-        <br></br>
-        <br></br>
-        <br></br>
+        <button
+            className="sb-btn"
+            onClick={() => showSleeping()}>
+            Sleeping
+        </button>
         <br></br>
         <br></br>
         <br></br>
