@@ -17,6 +17,8 @@ import { Redirect } from 'react-router-dom';
 
 
 function ResearcherPage(props) {
+    const [start, setStart] = useState("");
+    const [end, setEnd] = useState("");
     const [showBarObjective, setShowBarObjective] = useState(false);
     const [allFeatures, setAllFeatures] = useState();
     // const [allMeetings, setAllMeetings] = useState();
@@ -39,14 +41,14 @@ function ResearcherPage(props) {
     const [elderlyData, setElderlyData] = useState("");
     const [showElderly, setShowElderly] = useState(false);
     const [datesArray, setDatesArray] = useState([]);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isDemographicSubmitted, setIsDemographicSubmitted] = useState(false);
+    const [isElderlySubmitted, setIsElderlySubmitted] = useState(false);    
     const [open, setOpen] = useState(false);
 
     const handleDropdownFocus=(state) =>
     {
         setOpen(!state)
     }
-
 
     const handleStart = (s) => {
         if (s) {
@@ -62,16 +64,16 @@ function ResearcherPage(props) {
 
     useEffect(() => {
         handleElderly();
-      }, [elderlyIdChosen]);
+    }, [elderlyIdChosen]);
 
     useEffect(() => {
         getAllElderlys();
-      }, []);
+    }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         datesArr();
-      }, [allFeatures]);
-
+    }, [allFeatures]);
+    
     
     const getAllElderlys = async () =>
     {
@@ -90,11 +92,11 @@ function ResearcherPage(props) {
 
     const handleElderly = async () =>
     {
-            console.log("NAVIT ELDERLY ID CHOSE in handle Elderly -",elderlyIdChosen);
+        console.log("NAVIT ELDERLY ID CHOSE in handle Elderly -",elderlyIdChosen);
 
-            setElderlyData(elderlyIdChosen)
-            showElderlyData(elderlyIdChosen);
-            getAllFeatures();
+        setElderlyData(elderlyIdChosen)
+        showElderlyData(elderlyIdChosen);
+        getAllFeatures();
             
     } 
 
@@ -105,72 +107,71 @@ function ResearcherPage(props) {
         setElderlyId(elderlyId)
     }
 
-    const showElderlyData =  (elderlyId) =>
-    {
-        console.log("ELDERLY ID IN SHOW - ", elderlyId)
+    const showElderlyData = (elderlyId) => {
+        console.log("ELDERLY ID IN SHOW - ", elderlyId);
         const allData = allElderlys.find(item => item.elderlyNum === elderlyId);
-        const data = {"Gender": allData["gender"], "Birth Year": allData["birthYear"], "City": allData["city"]}
-
+        
+        const defaultData = {"Gender": "Null", "Birth Year": "Null", "City": "Null"};
+        const data = typeof allData === "undefined"
+          ? defaultData
+          : {"Gender": allData.gender, "Birth Year": allData.birthYear, "City": allData.city};
+        
         setElderlyData(data);
         setShowElderly(true);
+    };
 
-    }
-
-    const [start, setStart] = useState("");
-    const [end, setEnd] = useState("");
-    
     const getAllFeatures = async () => 
     {
         const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [], sleeping: [] }
         const elderlyId = elderlyIdChosen;
         const startDate = new Date(start);
         const endDate = new Date(end);
-        
-    await axios.get(`http://localhost:3000/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseSteps => {
-        console.log("STEPS -",responseSteps);
-        allFeaturesFromDB.steps = responseSteps.data;
-    })
-    await axios.get(`http://localhost:3000/researcher/features/activeMinutes/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseActiveMinutes => {
-        console.log("ACTIVE MINUTES -",responseActiveMinutes);
-        allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
-    })
-    await axios.get(`http://localhost:3000/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseHr => {
-        console.log("HR -",responseHr);
-        allFeaturesFromDB.hr = responseHr.data;
-    })
-    await axios.get(`http://localhost:3000/researcher/features/loneliness/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseLonliness => {
-        console.log("LONLINESS -",responseLonliness);
-        allFeaturesFromDB.loneliness = responseLonliness.data;
-    })
-    await axios.get(`http://localhost:3000/researcher/features/depression/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseDepression => {
-        console.log("DEPRESSION -",responseDepression);
-        allFeaturesFromDB.depression = responseDepression.data;
-    })
-    await axios.get(`http://localhost:3000/researcher/features/physicalCondition/${elderlyId}/${startDate}/${endDate}`)
-    .then(responsePhysicalCondition => {
-        console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
-        allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
-    })
-    await axios.get(`http://localhost:3000/researcher/features/sleep/${elderlyId}/${startDate}/${endDate}`)
-    .then(responseSleeping => {
-        console.log("SLEEPING -",responseSleeping);
-        allFeaturesFromDB.sleeping = responseSleeping.data;
+        await axios.get(`http://localhost:3000/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
+        .then(responseSteps => {
+            console.log("STEPS -",responseSteps);
+            allFeaturesFromDB.steps = responseSteps.data;
+        })
+        await axios.get(`http://localhost:3000/researcher/features/activeMinutes/${elderlyId}/${startDate}/${endDate}`)
+        .then(responseActiveMinutes => {
+            console.log("ACTIVE MINUTES -",responseActiveMinutes);
+            allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
+        })
+        await axios.get(`http://localhost:3000/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
+        .then(responseHr => {
+            console.log("HR -",responseHr);
+            allFeaturesFromDB.hr = responseHr.data;
+        })
+        await axios.get(`http://localhost:3000/researcher/features/loneliness/${elderlyId}/${startDate}/${endDate}`)
+        .then(responseLonliness => {
+            console.log("LONLINESS -",responseLonliness);
+            allFeaturesFromDB.loneliness = responseLonliness.data;
+        })
+        await axios.get(`http://localhost:3000/researcher/features/depression/${elderlyId}/${startDate}/${endDate}`)
+        .then(responseDepression => {
+            console.log("DEPRESSION -",responseDepression);
+            allFeaturesFromDB.depression = responseDepression.data;
+        })
+        await axios.get(`http://localhost:3000/researcher/features/physicalCondition/${elderlyId}/${startDate}/${endDate}`)
+        .then(responsePhysicalCondition => {
+            console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
+            allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
-    })
-    .catch(error => {
-        console.log(error);
-    });
+        })
+        await axios.get(`http://localhost:3000/researcher/features/sleep/${elderlyId}/${startDate}/${endDate}`)
+        .then(responseSleeping => {
+            console.log("SLEEPING -",responseSleeping);
+            allFeaturesFromDB.sleeping = responseSleeping.data;
 
-    setAllFeatures(allFeaturesFromDB);
-    console.log("STAV GET ALL FEATURES=", allFeaturesFromDB)
+        })
+        .catch(error => {
+            console.log(error);
+        });
 
-}
+        setAllFeatures(allFeaturesFromDB);
+        console.log("STAV GET ALL FEATURES=", allFeaturesFromDB)
+
+    }
 
     const minDate = async () =>
     {
@@ -211,10 +212,7 @@ function ResearcherPage(props) {
 
     const setDates = async(e) =>
     {
-
         getAllFeatures();
-        // getAllMeetings();
-
     }
 
     const datesArr = async() => {
@@ -225,8 +223,8 @@ function ResearcherPage(props) {
         const endDate = new Date(max);
         for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
             newDates.push(d.getTime());
-            }
-            setDatesArray(newDates);
+        }
+        setDatesArray(newDates);
 
     }
 
@@ -416,11 +414,22 @@ function ResearcherPage(props) {
     }
 
     const handleButtonClick = () => {
-        setIsSubmitted(true);
+        setIsDemographicSubmitted(true);
+        setIsElderlySubmitted(false);
     };
 
-    if (isSubmitted) {
+    if (isDemographicSubmitted) {
         return <Redirect to="/DemographicPage" />;
+    }
+
+    const handleInsertButtonClick = () => {
+        setIsElderlySubmitted(true);
+        setIsDemographicSubmitted(false);
+
+    }
+
+    if (isElderlySubmitted) {
+        return <Redirect to="/InsertElderly" />;
     }
 
     const contentSubjectiveData = (
@@ -517,6 +526,7 @@ function ResearcherPage(props) {
                     {open && (
                         <ul>
                             <li onClick={handleButtonClick}>Demographic information</li>
+                            <li onClick={handleInsertButtonClick}>Insert elderly</li>
                         </ul>
                     )}
                 </div>

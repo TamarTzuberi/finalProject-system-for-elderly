@@ -47,7 +47,8 @@ function DemographicPage(props) {
     const [genderData, setGenderData] = useState("");
     // const [ageData, setAgeData] = useState("");
     // const [showCity, setShowCity] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isDemographicSubmitted, setIsDemographicSubmitted] = useState(false);
+    const [isElderlySubmitted, setIsElderlySubmitted] = useState(false);        
     const [open, setOpen] = useState(false);
 
     const handleDropdownFocus=(state) =>
@@ -460,11 +461,20 @@ function DemographicPage(props) {
     }
 
     const handleButtonClick = () => {
-        setIsSubmitted(true);
-      };
+        setIsDemographicSubmitted(true);
+    };
 
-    if (isSubmitted) {
-        return <Redirect to="/ResearcherPage" />;
+    if (isDemographicSubmitted) {
+        return <Redirect to="/DemographicPage" />;
+    }
+
+    const handleInsertButtonClick = () => {
+        setIsElderlySubmitted(true);
+
+    }
+
+    if (isElderlySubmitted) {
+        return <Redirect to="/InsertElderly" />;
     }
 
     const contentSubjectiveData = (
@@ -560,6 +570,7 @@ function DemographicPage(props) {
                     {open && (
                         <ul>
                             <li onClick={handleButtonClick}>Personal information</li>
+                            <li onClick={handleInsertButtonClick}>Insert elderly</li>
                         </ul>
                     )}
                 </div>

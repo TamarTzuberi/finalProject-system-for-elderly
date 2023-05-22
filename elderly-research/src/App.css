@@ -269,3 +269,19 @@ align-items: center;
   background: #ffffff;
 }
 
+.btn {
+  font-weight: 700;
+  font-size: 1em;
+  color: #f1faee;
+  width: 200px;
+  height: 35px;
+  /* border: none; */
+  border-radius: 20px;
+  /* cursor: pointer; */
+  background-color: #457b9d;
+}
+
+.btn:hover {
+  background-color: #4a10f6
+}
+
