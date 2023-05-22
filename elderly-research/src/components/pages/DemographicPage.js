@@ -101,26 +101,29 @@ function DemographicPage(props) {
         getAllGenders();
       }, []);
     
-    const getAllElderlys = async () =>
-    {
-        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
-        .then(responseAllElderlys => {
+      const getAllElderlys = async () => {
+        await axios
+          .get(`http://localhost:3000/elderly/allElderlyUsers`)
+          .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
-            setAllElderlysData(responseAllElderlys.data)
-            const allElderlysIds = (responseAllElderlys.data).map(e => e.elderlyNum)
+            const filteredElderlys = responseAllElderlys.data.filter(
+              elderly => Object.values(elderly).every(value => value !== null)
+            );
+            setAllElderlysData(filteredElderlys);
+            const allElderlysIds = filteredElderlys.map(e => e.elderlyNum);
             return allElderlysIds;
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.log(error);
-        });
-    }
+          });
+      };
 
     const getAllCities = async () =>
     {
         await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
-            const allCities = (responseAllElderlys.data).map(e => e.city)
+            const allCities = responseAllElderlys.data.map((e) => e.city).filter((city) => city !== null);        
             setCity(responseAllElderlys.data[0].city)
             return allCities;
         })
@@ -135,8 +138,11 @@ function DemographicPage(props) {
         await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
-            const allGenders = (responseAllElderlys.data).map(e => e.gender)
+            const allGenders = responseAllElderlys.data.map((e) => e.gender).filter((gender) => gender !== null);            
             setGender(responseAllElderlys.data[0].gender)
+            console.log("ALLGENDER ", allGenders)
+            console.log("ALLGENDER2 ", responseAllElderlys.data[0])
+
             return allGenders;
         })
         .catch(error => {
@@ -462,14 +468,16 @@ function DemographicPage(props) {
 
     const handleButtonClick = () => {
         setIsDemographicSubmitted(true);
+        setIsElderlySubmitted(false);
     };
 
     if (isDemographicSubmitted) {
-        return <Redirect to="/DemographicPage" />;
+        return <Redirect to="/ResearcherPage" />;
     }
 
     const handleInsertButtonClick = () => {
         setIsElderlySubmitted(true);
+        setIsDemographicSubmitted(false);
 
     }
 

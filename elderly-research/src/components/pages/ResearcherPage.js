@@ -80,9 +80,12 @@ function ResearcherPage(props) {
         await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
-            setAllElderlysData(responseAllElderlys.data)
+            const filteredElderlys = responseAllElderlys.data.filter(elderly =>
+                Object.values(elderly).every(value => value !== null)
+            );
+            setAllElderlysData(filteredElderlys)
             const allElderlysIds = (responseAllElderlys.data).map(e => e.elderlyNum)
-            setElderlyId(responseAllElderlys.data[0].elderlyNum)
+            setElderlyId(filteredElderlys[0].elderlyNum)
             return allElderlysIds;
         })
         .catch(error => {
@@ -107,18 +110,29 @@ function ResearcherPage(props) {
         setElderlyId(elderlyId)
     }
 
-    const showElderlyData = (elderlyId) => {
-        console.log("ELDERLY ID IN SHOW - ", elderlyId);
-        const allData = allElderlys.find(item => item.elderlyNum === elderlyId);
+    // const showElderlyData = (elderlyId) => {
+    //     console.log("ELDERLY ID IN SHOW - ", elderlyId);
+    //     const allData = allElderlys.find(item => item.elderlyNum === elderlyId);
         
-        const defaultData = {"Gender": "Null", "Birth Year": "Null", "City": "Null"};
-        const data = typeof allData === "undefined"
-          ? defaultData
-          : {"Gender": allData.gender, "Birth Year": allData.birthYear, "City": allData.city};
+    //     const defaultData = {"Gender": "Null", "Birth Year": "Null", "City": "Null"};
+    //     const data = typeof allData === "undefined"
+    //       ? defaultData
+    //       : {"Gender": allData.gender, "Birth Year": allData.birthYear, "City": allData.city};
+        
+    //     setElderlyData(data);
+    //     setShowElderly(true);
+    // };
+
+    const showElderlyData =  (elderlyId) =>
+    {
+        console.log("ELDERLY ID IN SHOW - ", elderlyId)
+        const allData = allElderlys.find(item => item.elderlyNum === elderlyId);
+        const data = {"Gender": allData.gender, "Birth Year": allData.birthYear, "City": allData.city}
         
         setElderlyData(data);
         setShowElderly(true);
-    };
+
+    }
 
     const getAllFeatures = async () => 
     {
