@@ -76,12 +76,17 @@ function InsertElderly(props) {
     
         axios.post("http://localhost:3000/elderly/newElderly", elderlyData)
           .then(response => {
-            console.log("Elderly inserted successfully");
             // Reset the input fields after successful insertion
             setEmail("");
             setFirstName("");
             setLastName("");
-            alert("Elderly inserted successfully");
+
+            if (response.data.success === false && response.data.message === 'Already exists'){
+                alert("Elderly's email is already in the system");
+            }
+            else{
+                alert("Elderly's information has been successfully entered into the system");
+            }
           })
           .catch(error => {
             // Handle error
@@ -92,8 +97,8 @@ function InsertElderly(props) {
     
     return (
         <div className='app'>
-            <div style={{marginLeft:'1000px'}}>
-                 <div className='app-drop-down-container' style={{marginTop:'-200px'}}>
+            <div className="rightContainerLogin">
+                 <div className='app-drop-down-container-elderly'>
                      <button onClick={e=>handleDropdownFocus(open)}>Other options</button>
                      {open && (
                          <ul>
