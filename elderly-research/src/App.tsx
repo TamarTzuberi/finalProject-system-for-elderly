@@ -12,7 +12,7 @@ export default class App extends React.Component<{}> {
           {/* React components must have a wrapper node/element */}
           <h1>Elderly</h1>
           <Link to="/LoginPage">
-            <button>
+            <button className="btn">
               Start Research
             </button>
           </Link>

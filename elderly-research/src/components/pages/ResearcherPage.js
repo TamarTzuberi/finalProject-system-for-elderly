@@ -547,6 +547,7 @@ function ResearcherPage(props) {
             <Sidebar history={props.history} content={contentSubjectiveData} />
             <br></br>
             <div style={{backgroundColor: '#f9f9f9', textAlign: 'center'}} >
+                    <span style={{ fontWeight: 'bold' }}>Elderly chosen : </span>
                     <select value={elderlyIdChosen} onChange={e => handleSelection(e.target.value)}>
                     {
                         allElderlys.map((option) => (
