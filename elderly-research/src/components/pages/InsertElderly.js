@@ -9,8 +9,8 @@ function InsertElderly(props) {
     const [isPersonalSubmitted, setIsPersonalSubmitted] = useState(false);        
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    // const [firstName, setFirstName] = useState("");
+    // const [lastName, setLastName] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
 
@@ -43,13 +43,13 @@ function InsertElderly(props) {
 
       };
     
-      const handleFirstNameChange = (event) => {
-        setFirstName(event.target.value);
-      };
+      // const handleFirstNameChange = (event) => {
+      //   setFirstName(event.target.value);
+      // };
     
-      const handleLastNameChange = (event) => {
-        setLastName(event.target.value);
-      };
+      // const handleLastNameChange = (event) => {
+      //   setLastName(event.target.value);
+      // };
 
       const validateEmail = (email) =>{
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,7 +57,9 @@ function InsertElderly(props) {
       }
     
       const handleAddElderly = () => {
-        if (!email || !firstName || !lastName) {
+        // if (!email || !firstName || !lastName) {
+
+        if (!email) {
             setErrorMessage("Please fill in all the required fields.");
             return;
           }
@@ -68,8 +70,8 @@ function InsertElderly(props) {
         // Create an object with the elderly data
         const elderlyData = {
           email,
-          firstName,
-          lastName
+          // firstName,
+          // lastName
         };
 
         console.log("ELDERLY DATA: ", elderlyData)
@@ -78,8 +80,8 @@ function InsertElderly(props) {
           .then(response => {
             // Reset the input fields after successful insertion
             setEmail("");
-            setFirstName("");
-            setLastName("");
+            // setFirstName("");
+            // setLastName("");
 
             if (response.data.success === false && response.data.message === 'Already exists'){
                 alert("Elderly's email is already in the system");
@@ -111,10 +113,10 @@ function InsertElderly(props) {
             <div className='login-form'>
                 <label>Email:</label>
                 <input type="text" value={email} onChange={handleEmailChange} />
-                <label>First Name:</label>
+                {/* <label>First Name:</label>
                 <input type="text" value={firstName} onChange={handleFirstNameChange} />
                 <label>Last Name:</label>
-                <input type="text" value={lastName} onChange={handleLastNameChange} />
+                <input type="text" value={lastName} onChange={handleLastNameChange} /> */}
             </div>
             {errorMessage && <div className="error">{errorMessage}</div>}
             {emailErrorMessage && <p className="error">{emailErrorMessage}</p>}

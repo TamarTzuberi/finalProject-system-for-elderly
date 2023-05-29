@@ -348,10 +348,10 @@ function DemographicPage(props) {
         const max = await maxDate();
         const startDate = new Date(min);
         const endDate = new Date(max);
-        for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        for (let d = startDate; d.getTime() <= endDate.getTime(); d.setDate(d.getDate() + 1)) {
             newDates.push(d.getTime());
-            }
-            setDatesArray(newDates);
+        }
+        setDatesArray(newDates);
 
     }
 
@@ -445,27 +445,57 @@ function DemographicPage(props) {
     }
 
     const extract = async (dataDateArr, dataType) => {
+        const timestampArr = dataDateArr.map(item => new Date(item.date).getTime());
+
+        console.log("dataDateArr: ", dataDateArr)
         // console.log("DATES IN EXTRACT: ", dataDateArr);
         let dataArr = []
         let dateArr = []
-        console.log("DATES IN EXTRACT: ", datesArray);
+        // let pointsStyleArr = []
+        // let pointsRadiusArr = []
+        console.log("DATES IN EXTRACT: - datesArray ", datesArray);
 
         for (let key1 in datesArray) {
+            // console.log("1: ", key1);
+            // console.log("date n.1: ", datesArray[key1]);
             dateArr.push(stringToDate(datesArray[key1]))
+            // let date = new Date(datesArray[key1].date).getTime();
+            // if (!dataDateArr.includes(date)){
+            //     dataArr.push(0)
+            // }
         }
-        for (let key in dataDateArr) {
-            let dataVal = dataDateArr[key].value;
-            let date = new Date(dataDateArr[key].date).getTime();
-            if (datesArray.includes(date)){
-                dataArr.push(dataVal)
-                // dateArr.push(stringToDate(date))
-            }
-            else{
-                dataArr.push(0)
-                // dateArr.push(stringToDate(date))
-            }
-        }
+        // for (let key in dataDateArr) {
+        //     console.log("key: ", key)
+        //     let dataVal = dataDateArr[key].value;
+        //     console.log("dataVal: ", dataVal)
+        //     let date = new Date(dataDateArr[key].date).getTime();
+        //     console.log("DATE:",date)
+        //     console.log("datesArray:",datesArray)
+        //     if (datesArray.includes(date)){
+        //         dataArr.push(dataVal)
+        //         // dateArr.push(stringToDate(date))
+        //     }
+        //     else{
+        //         dataArr.push(0)
+        //         // dateArr.push(stringToDate(date))
+        //     }
+        // }
 
+        console.log("dataDateArr: ",dataDateArr)
+
+        for (let key in datesArray) {
+            let date = datesArray[key];
+            console.log("date: ",date)
+            let dataIndex = timestampArr.findIndex(item => item === date);
+            console.log("dataIndex: ",dataIndex)
+
+            if (dataIndex !== -1) {
+              let dataVal = dataDateArr[dataIndex].value;
+              dataArr.push(dataVal);
+            } else {
+              dataArr.push(0);
+            }
+          }
         // console.log("DATE ARR FORMAT: ", dataArr)
         if (dataType ==='obj') {
             setDataObjective(dataArr)
@@ -478,6 +508,8 @@ function DemographicPage(props) {
         }
         else{
             setLabels(dateArr)
+            // setPointsStyle(pointsStyleArr)
+            // setPointsRadius(pointsRadiusArr)
         }
 
     }
