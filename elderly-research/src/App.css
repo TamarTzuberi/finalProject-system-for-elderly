@@ -156,6 +156,26 @@ button:focus {
   background-color: #9dcccd
 }
 
+.sb-btn-1 {
+  font-weight: 700;
+  text-transform: none;
+  font-size: 1em;
+  text-align: center;
+  color: #f1faee;
+  padding: 8px 0px;
+  width: 200px;
+  height: 45px;
+  border: none;
+  border-radius: 20px;
+  margin-top: 10%;
+  cursor: pointer;
+  background-color: #457b9d;
+}
+
+.sb-btn:hover {
+  background-color: #9dcccd
+}
+
 /* form styling */
 .form-group input {
   width: 90%;

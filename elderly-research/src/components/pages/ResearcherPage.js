@@ -333,15 +333,23 @@ function ResearcherPage(props) {
         const elderlyId = elderlyIdChosen;
         let rows = [];
         rows.push(['Date', 'Steps', 'Heart_Rate', 'Active_Minutes', 'Depression', 'Loneliness', 'Physical Condition', 'Sleeping'])
-        for (let day = 0; day < allFeatures.steps.length; day++) {
-            let date = allFeatures.steps[day].date;
-            let step = allFeatures.steps[day] ? allFeatures.steps[day].value : "no data";
-            let hr = allFeatures.hr[day] ? allFeatures.hr[day].value : "no data";
-            let am = allFeatures.activeMinutes[day] ? allFeatures.activeMinutes[day].value : "no data";
-            let dep = allFeatures.depression[day] ? allFeatures.depression[day].value : "no data";
-            let lonliness = allFeatures.loneliness[day] ? allFeatures.loneliness[day].value : "no data";
-            let physicalCond = allFeatures.physicalCondition[day] ? allFeatures.physicalCondition[day].value : "no data";
-            let sleeping = allFeatures.sleeping[day] ? allFeatures.sleeping[day].value : "no data";
+        for (let day = 0; day < datesArray.length; day++) {
+            let timestamp = datesArray[day];
+            let date = new Date(timestamp).toISOString().slice(0, 10); // Convert timestamp to ISO string and extract yyyy-mm-dd
+            let stepItem = allFeatures.steps.find(item => item.date.slice(0, 10) === date);
+            let step = stepItem ? stepItem.value : "no data";
+            let hrItem = allFeatures.hr.find(item => item.date.slice(0, 10) === date);
+            let hr = hrItem ? hrItem.value : "no data";
+            let amItem = allFeatures.activeMinutes.find(item => item.date.slice(0, 10) === date);
+            let am = amItem ? amItem.value : "no data";
+            let depressionItem = allFeatures.depression.find(item => item.date.slice(0, 10) === date);
+            let dep = depressionItem ? depressionItem.value : "no data";
+            let lonlinessItem = allFeatures.loneliness.find(item => item.date.slice(0, 10) === date);
+            let lonliness = lonlinessItem ? lonlinessItem.value : "no data";
+            let physicalItem = allFeatures.physicalCondition.find(item => item.date.slice(0, 10) === date);
+            let physicalCond = physicalItem ? physicalItem.value : "no data";
+            let sleepingItem = allFeatures.sleeping.find(item => item.date.slice(0, 10) === date);
+            let sleeping = sleepingItem ? sleepingItem.value : "no data";
             rows.push([date, step + '', hr + '', am + '', dep + '', lonliness + '', physicalCond + '', sleeping + '']);
 
         }
@@ -350,7 +358,7 @@ function ResearcherPage(props) {
         const csvData = encodeURI(csv);
         const link = document.createElement('a');
         link.href = 'data:text/csv;charset=utf-8,' + csvData;
-        link.download = `${elderlyId}_data.csv`;;
+        link.download = `summary of elderly id:${elderlyId}.csv`;
         document.body.appendChild(link);
         link.click();
     }
@@ -519,7 +527,7 @@ function ResearcherPage(props) {
             <button
                 className="sb-btn"
                 onClick={() => downloadToCsv()}>
-                Download To CSV
+                Download to CSV
             </button>
             <br></br>
             <br></br>

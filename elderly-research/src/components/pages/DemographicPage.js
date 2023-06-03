@@ -256,6 +256,9 @@ function DemographicPage(props) {
         const economy = economyChosen;
         const startDate = new Date(start);
         const endDate = new Date(end);
+        console.log("startDate: ", startDate)
+        console.log("endDate: ", endDate)
+
 
     await axios.get(`http://localhost:3000/researcher/features/${"Steps"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
     .then(responseSteps => {
@@ -298,6 +301,7 @@ function DemographicPage(props) {
         console.log(error);
     });
     setAllFeatures(allFeaturesFromDB);
+    console.log("allFeaturesFromDB: ", allFeaturesFromDB)
     return allFeaturesFromDB;
 
 }
@@ -316,6 +320,7 @@ function DemographicPage(props) {
                 }
             }
         }
+        console.log("MIN DATE: ", minD.toISOString())
         return minD.toISOString();
 
     }
@@ -323,6 +328,7 @@ function DemographicPage(props) {
     const maxDate = async () => {
         const arrOfMaxDates = [];
         for (const key in allFeatures) {
+            console.log("key= ", key)
             const arr = allFeatures[key];
             console.log("ARR= ", arr)
             if (Array.isArray(arr) && arr.length > 0) {
@@ -332,6 +338,7 @@ function DemographicPage(props) {
             }
         }
         const maxD = new Date(Math.max(...arrOfMaxDates));
+        console.log("max DATE: ", maxD.toISOString())
         return maxD.toISOString();
 
     }
@@ -520,15 +527,24 @@ function DemographicPage(props) {
         const economy = economyChosen;
         let rows = [];
         rows.push(['Date', 'Average Steps', 'Average Heart_Rate', 'Average Active_Minutes', 'Average Depression', 'Average Loneliness', 'Average Physical Condition', 'Average Sleeping'])
-        for (let day = 0; day < allFeatures.steps.length; day++) {
-            let date = allFeatures.steps[day].date;
-            let step = allFeatures.steps[day] ? allFeatures.steps[day].value : "no data";
-            let hr = allFeatures.hr[day] ? allFeatures.hr[day].value : "no data";
-            let am = allFeatures.activeMinutes[day] ? allFeatures.activeMinutes[day].value : "no data";
-            let dep = allFeatures.depression[day] ? allFeatures.depression[day].value : "no data";
-            let lonliness = allFeatures.loneliness[day] ? allFeatures.loneliness[day].value : "no data";
-            let physicalCond = allFeatures.physicalCondition[day] ? allFeatures.physicalCondition[day].value : "no data";
-            let sleeping = allFeatures.sleeping[day] ? allFeatures.sleeping[day].value : "no data";
+        
+        for (let day = 0; day < datesArray.length; day++) {
+            let timestamp = datesArray[day];
+            let date = new Date(timestamp).toISOString().slice(0, 10); // Convert timestamp to ISO string and extract yyyy-mm-dd            
+            let stepItem = allFeatures.steps.find(item => item.date === date);
+            let step = stepItem ? stepItem.value : "no data";
+            let hrItem = allFeatures.hr.find(item => item.date === date);
+            let hr = hrItem ? hrItem.value : "no data";
+            let amItem = allFeatures.activeMinutes.find(item => item.date === date);
+            let am = amItem ? amItem.value : "no data";
+            let depressionItem = allFeatures.depression.find(item => item.date === date);
+            let dep = depressionItem ? depressionItem.value : "no data";
+            let lonlinessItem = allFeatures.loneliness.find(item => item.date === date);
+            let lonliness = lonlinessItem ? lonlinessItem.value : "no data";
+            let physicalItem = allFeatures.physicalCondition.find(item => item.date === date);
+            let physicalCond = physicalItem ? physicalItem.value : "no data";
+            let sleepingItem = allFeatures.sleeping.find(item => item.date === date);
+            let sleeping = sleepingItem ? sleepingItem.value : "no data";
             rows.push([date, step + '', hr + '', am + '', dep + '', lonliness + '', physicalCond + '', sleeping + '']);
 
         }
@@ -537,9 +553,44 @@ function DemographicPage(props) {
         const csvData = encodeURI(csv);
         const link = document.createElement('a');
         link.href = 'data:text/csv;charset=utf-8,' + csvData;
-        link.download = `${cityName}_${gender}_${economy}_data.csv`;
+        link.download = `summary of city ${cityName}, gender ${gender}, economy ${economy}.csv`;
         document.body.appendChild(link);
         link.click();
+    }
+
+    const downloadElderliesData = async () => {
+        let rows = [];
+        rows.push(['Elderly Num', 'Birth Year', 'City', 'Gender', 'Economy'])
+
+        await axios
+          .get(`http://localhost:3000/elderly/allElderlyUsers`)
+          .then(responseAllElderlys => {
+            const elderlyUsers = responseAllElderlys.data;
+
+            for (const elderly of elderlyUsers) {
+                const elderlyNum = elderly.elderlyNum || "no data";
+                const birthYear = elderly.birthYear || "no data";
+                const city = elderly.city || "no data";
+                const gender = elderly.gender || "no data";
+                const economy = elderly.economy || "no data";
+            
+            // Filter out the rows with null values in any field
+            if (birthYear !== "no data" && city !== "no data" && gender !== "no data" && economy !== "no data") {
+                rows.push([elderlyNum, birthYear, city, gender, economy]);}            
+            }
+
+            const csv = Papa.unparse(rows);
+            const csvData = encodeURI(csv);
+            const link = document.createElement('a');
+            link.href = 'data:text/csv;charset=utf-8,' + csvData;
+            link.download = `Elderlies data.csv`;
+            document.body.appendChild(link);
+            link.click();
+
+          })
+          .catch(error => {
+            console.log(error);
+          });
     }
 
     const handleButtonClick = () => {
@@ -588,6 +639,8 @@ function DemographicPage(props) {
         <br></br>
         <br></br>
         <br></br>
+        <br></br>
+        <br></br>
         <button
             className="sb-btn"
             onClick={() => clearSubjectiveData()}>
@@ -613,15 +666,18 @@ function DemographicPage(props) {
                 onClick={() => showAM()}>
                 Active Minutes
             </button>
+            <br></br>
+            <br></br>
             <button
                 className="sb-btn"
                 onClick={() => downloadToCsv()}>
-                Download To CSV
+                Download to CSV
             </button>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
+            <button
+            className="sb-btn-1"
+            onClick={() => downloadElderliesData()}>
+            Download Elderlies Data to CSV
+        </button>
             <button
             className="sb-btn"
             onClick={() => clearObjectiveData()}>
