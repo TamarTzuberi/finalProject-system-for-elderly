@@ -166,8 +166,8 @@ function DemographicPage(props) {
         await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
-            const allEconomy = responseAllElderlys.data.map((e) => e.economy).filter((economy) => economy !== null);        
-            setEconomy(responseAllElderlys.data[0].economy)
+            const allEconomy = responseAllElderlys.data.map((e) => e.economicState).filter((economicState) => economicState !== null);        
+            setEconomy(responseAllElderlys.data[0].economicState)
             return allEconomy;
         })
         .catch(error => {
@@ -230,11 +230,11 @@ function DemographicPage(props) {
         setGender(gender);
     }
 
-    const handleSelectionEconomy = (economy) =>
+    const handleSelectionEconomy = (economicState) =>
     {
         clearObjectiveData();
         clearSubjectiveData();
-        setEconomy(economy);
+        setEconomy(economicState);
     }
 
     // const handleSelectionAge = (age) =>
@@ -253,45 +253,45 @@ function DemographicPage(props) {
         const allFeaturesFromDB = {steps: [] ,activeMinutes: [], hr: [], loneliness: [],depression: [], physicalCondition: [], sleeping: [] }
         const city = cityChosen;
         const gender = genderChosen;
-        const economy = economyChosen;
+        const economicState = economyChosen;
         const startDate = new Date(start);
         const endDate = new Date(end);
         console.log("startDate: ", startDate)
         console.log("endDate: ", endDate)
 
 
-    await axios.get(`http://localhost:3000/researcher/features/${"Steps"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"Steps"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseSteps => {
         console.log("STEPS -",responseSteps);
         allFeaturesFromDB.steps = responseSteps.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"ActiveMinutes"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"ActiveMinutes"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseActiveMinutes => {
         console.log("ACTIVE MINUTES -",responseActiveMinutes);
         allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"HR"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"HR"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseHr => {
         console.log("HR -",responseHr);
         allFeaturesFromDB.hr = responseHr.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"Loneliness"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"Loneliness"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseLonliness => {
         console.log("LONLINESS -",responseLonliness);
         allFeaturesFromDB.loneliness = responseLonliness.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"Depression"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"Depression"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseDepression => {
         console.log("DEPRESSION -",responseDepression);
         allFeaturesFromDB.depression = responseDepression.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"PhysicalCondition"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"PhysicalCondition"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responsePhysicalCondition => {
         console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
         allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"Sleeping"}/${city}/${gender}/${economy}/${startDate}/${endDate}`)
+    await axios.get(`http://localhost:3000/researcher/features/${"Sleeping"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseSleeping => {
         console.log("SLEEPING -",responseSleeping);
         allFeaturesFromDB.sleeping = responseSleeping.data;
@@ -524,7 +524,7 @@ function DemographicPage(props) {
     const downloadToCsv = async () => {
         const cityName = cityChosen;
         const gender = genderChosen;
-        const economy = economyChosen;
+        const economicState = economyChosen;
         let rows = [];
         rows.push(['Date', 'Average Steps', 'Average Heart_Rate', 'Average Active_Minutes', 'Average Depression', 'Average Loneliness', 'Average Physical Condition', 'Average Sleeping'])
         
@@ -553,14 +553,14 @@ function DemographicPage(props) {
         const csvData = encodeURI(csv);
         const link = document.createElement('a');
         link.href = 'data:text/csv;charset=utf-8,' + csvData;
-        link.download = `summary of city ${cityName}, gender ${gender}, economy ${economy}.csv`;
+        link.download = `summary of city ${cityName}, gender ${gender}, economy ${economicState}.csv`;
         document.body.appendChild(link);
         link.click();
     }
 
     const downloadElderliesData = async () => {
         let rows = [];
-        rows.push(['Elderly Num', 'Birth Year', 'City', 'Gender', 'Economy'])
+        rows.push(['Elderly Num', 'Birth Year', 'City', 'Gender', 'Economic State', 'Family Status', 'Long Term Illness', 'Disability'])
 
         await axios
           .get(`http://localhost:3000/elderly/allElderlyUsers`)
@@ -572,11 +572,14 @@ function DemographicPage(props) {
                 const birthYear = elderly.birthYear || "no data";
                 const city = elderly.city || "no data";
                 const gender = elderly.gender || "no data";
-                const economy = elderly.economy || "no data";
-            
+                const economicState = elderly.economicState || "no data";
+                const familyStatus = elderly.familyStatus || "no data";
+                const longTermIllness = elderly.longTermIllness || "no data";
+                const disability = elderly.disability || "no data";
+
             // Filter out the rows with null values in any field
-            if (birthYear !== "no data" && city !== "no data" && gender !== "no data" && economy !== "no data") {
-                rows.push([elderlyNum, birthYear, city, gender, economy]);}            
+            if (birthYear !== "no data" && city !== "no data" && gender !== "no data" && economicState !== "no data") {
+                rows.push([elderlyNum, birthYear, city, gender, economicState, familyStatus, longTermIllness, disability]);}            
             }
 
             const csv = Papa.unparse(rows);
@@ -736,11 +739,11 @@ function DemographicPage(props) {
                         <option>{"All"}</option>
                     </select>
                 </div>
-                <div style={{backgroundColor: '#f9f9f9', fontWeight: 'bold', textAlign: 'center'}}>Economy: 
+                <div style={{backgroundColor: '#f9f9f9', fontWeight: 'bold', textAlign: 'center'}}>Economic State: 
                     <select value={economyChosen} onChange={e => handleSelectionEconomy(e.target.value)}>
-                        {[...new Set(allElderlys.map(option => option.economy))].map(economy => (
-                        <option key={economy} value={economy}>
-                            {economy}
+                        {[...new Set(allElderlys.map(option => option.economicState))].map(economicState => (
+                        <option key={economicState} value={economicState}>
+                            {economicState}
                         </option>
                         ))}
                         <option>{"All"}</option>
