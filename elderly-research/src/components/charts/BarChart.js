@@ -1,13 +1,9 @@
 import React from "react";
 
-// import { Bar, Bubble, Doughnut, Pie, Line, Scatter } from 'react-chartjs-2';
 import { Bar, Line } from 'react-chartjs-2';
 
 import Chart from 'chart.js/auto';
-// import Sidebar from "../sidebar/Sidebar";
-// import 'elderly-research/src/App.css'
-// import 'C:\\Users\\Stav\\final project\\finalProject-system-for-elderly\\elderly-research\\src\\App.css';
-import 'C:\\Users\\User\\final project\\finalProject-system-for-elderly\\front\\finalProject-system-for-elderly\\elderly-research\\src\\App.css'
+import '../../../src/App.css'
 
 
 const BarChart = (props) => {
@@ -23,9 +19,6 @@ const BarChart = (props) => {
         return color;
     }
     const getBackgroundColors = () => {
-        // for (var i=0;i<props.labels.length; i++){
-
-        // }
         backgroundColors.push(getRandomColor());
         return backgroundColors;
     }
@@ -78,9 +71,6 @@ const BarChart = (props) => {
                             type: 'linear',
                             min: props.minObjective,
                             max: props.maxObjective,
-                            // ticks: {
-                            //     stepSize: 1
-                            //     },
                             position: 'left',
                         },
                         B:
@@ -88,9 +78,6 @@ const BarChart = (props) => {
                             type: 'linear',
                             min: props.minSubjective,
                             max: props.maxSubjective,
-                            // ticks: {
-                            // stepSize: 1
-                            // },
                             position: 'right',
                         }
 
@@ -106,7 +93,6 @@ const BarChart = (props) => {
                     },
                     legend: {
                         display: true,
-                        // position: 'right'
                     },
                     scales: {
                         A:
@@ -114,10 +100,6 @@ const BarChart = (props) => {
                             type: 'linear',
                             min: props.minObjective,
                             max: props.maxObjective,
-                            // ticks: {
-
-                            //     stepSize: 1
-                            //     },
                             position: 'left',
                         },
                         B:
@@ -125,9 +107,6 @@ const BarChart = (props) => {
                             type: 'linear',
                             min: props.minSubjective,
                             max: props.maxSubjective,
-                            // ticks: {
-                            // stepSize: 1
-                            // },
                             position: 'right',
                             grid: {
                                 drawOnChartArea: true
