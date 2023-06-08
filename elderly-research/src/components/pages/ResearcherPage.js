@@ -498,8 +498,9 @@ function ResearcherPage(props) {
         <br></br>
         <br></br>
         <br></br>
+        <br></br>
         <button
-            className="sb-btn"
+            className="sb-btn-1"
             onClick={() => clearSubjectiveData()}>
             Clear Data
         </button>
@@ -533,8 +534,9 @@ function ResearcherPage(props) {
             <br></br>
             <br></br>
             <br></br>
+            <br></br>
             <button
-            className="sb-btn"
+            className="sb-btn-1"
             onClick={() => clearObjectiveData()}>
             Clear Data
             </button>
@@ -545,6 +547,7 @@ function ResearcherPage(props) {
     return (
         <div className="page">
             <div className="leftContainer" style={{marginTop:"45px"}}>
+            <h1 style={{ fontSize: "18px", marginTop:-40, marginBottom: 15 }}>Researcher Page</h1>
             <Sidebar history={props.history} content={contentObjectiveData} />
             </div>
             <div className="middleContainer" style={{}}>

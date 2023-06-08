@@ -643,9 +643,8 @@ function DemographicPage(props) {
         <br></br>
         <br></br>
         <br></br>
-        <br></br>
         <button
-            className="sb-btn"
+            className="sb-btn-1"
             onClick={() => clearSubjectiveData()}>
             Clear Data
         </button>
@@ -670,11 +669,10 @@ function DemographicPage(props) {
                 Active Minutes
             </button>
             <br></br>
-            <br></br>
             <button
-                className="sb-btn"
+                className="sb-btn-1"
                 onClick={() => downloadToCsv()}>
-                Download to CSV
+                Download the Graph Data to CSV
             </button>
             <button
             className="sb-btn-1"
@@ -682,7 +680,7 @@ function DemographicPage(props) {
             Download Elderlies Data to CSV
         </button>
             <button
-            className="sb-btn"
+            className="sb-btn-1"
             onClick={() => clearObjectiveData()}>
             Clear Data
             </button>
@@ -693,6 +691,7 @@ function DemographicPage(props) {
     return (
         <div className="page">
             <div className="leftContainer" style={{marginTop:"45px"}}>
+            <h1 style={{ fontSize: "18px", marginTop:-40, marginBottom: 15 }}>Demographic Page</h1>
             <Sidebar history={props.history} content={contentObjectiveData} />
             </div>
             <div className="middleContainer" style={{}}>

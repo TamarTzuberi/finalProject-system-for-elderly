@@ -11,21 +11,21 @@ function LoginPage(props) {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     // User Login info
-    const database = [
-    {
-      username: "admin@gmail.com",
-      password: "admin"
-    },
-    {
-      username: "master@gmail.com",
-      password: "master"
-    }
-    ];
+    // const database = [
+    // {
+    //   username: "admin@gmail.com",
+    //   password: "admin"
+    // },
+    // {
+    //   username: "master@gmail.com",
+    //   password: "master"
+    // }
+    // ];
 
-  const errors = {
-    uname: "invalid email",
-    pass: "invalid password"
-  };
+  // const errors = {
+  //   uname: "invalid email",
+  //   pass: "invalid password"
+  // };
 
   const handleSubmit = async (event) => {
     //Prevent page reload
@@ -33,6 +33,7 @@ function LoginPage(props) {
 
     var { uname, pass } = document.forms[0];
     var isLoggedInUser = false;
+    var isLoggedInMassage = "";
     console.log(uname.value);
 
     // Find user login info
@@ -41,9 +42,11 @@ function LoginPage(props) {
         password: pass.value
       })
         .then(isLoggedIn => {
-            console.log("isLoggedIn -",isLoggedIn);
-            isLoggedInUser = isLoggedIn.data;
-            console.log(isLoggedInUser);
+            console.log("isLoggedIn -",isLoggedIn.data);
+            isLoggedInUser = isLoggedIn.data.success;
+            isLoggedInMassage = isLoggedIn.data.message;
+            console.log("isLoggedInUser: ",isLoggedInUser);
+            console.log("isLoggedInMassage: ", isLoggedInMassage);
             })
         .catch(error => {
             console.log(error);
@@ -51,8 +54,9 @@ function LoginPage(props) {
 
     // Compare user info
     if (!isLoggedInUser) {
-      // Invalid password
-      setErrorMessages({ name: "pass", message: errors.pass });
+      // Invalid email or password
+      setErrorMessages({name: "email",message: isLoggedInMassage});
+      setErrorMessages({name: "pass",message: isLoggedInMassage});
     } else {
       setIsSubmitted(true);
 };
@@ -69,7 +73,7 @@ function LoginPage(props) {
     <div className="form">
       <form onSubmit={handleSubmit}>
         <div className="input-container">
-          <label>Email </label>
+          <label>Username </label>
           <input type="text" name="uname" required />
           {renderErrorMessage("uname")}
         </div>

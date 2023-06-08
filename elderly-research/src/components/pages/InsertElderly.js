@@ -9,8 +9,6 @@ function InsertElderly(props) {
     const [isPersonalSubmitted, setIsPersonalSubmitted] = useState(false);        
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
-    // const [firstName, setFirstName] = useState("");
-    // const [lastName, setLastName] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [emailErrorMessage, setEmailErrorMessage] = useState("");
 
@@ -42,14 +40,6 @@ function InsertElderly(props) {
         setEmailErrorMessage('');
 
       };
-    
-      // const handleFirstNameChange = (event) => {
-      //   setFirstName(event.target.value);
-      // };
-    
-      // const handleLastNameChange = (event) => {
-      //   setLastName(event.target.value);
-      // };
 
       const validateEmail = (email) =>{
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,21 +47,18 @@ function InsertElderly(props) {
       }
     
       const handleAddElderly = () => {
-        // if (!email || !firstName || !lastName) {
-
         if (!email) {
-            setErrorMessage("Please fill in all the required fields.");
+            setErrorMessage("Please fill the required field.");
             return;
           }
           if (!validateEmail(email)) {
-            setEmailErrorMessage('Invalid email format');
+            setErrorMessage("");
+            setEmailErrorMessage('Invalid email format!');
             return;
           }
         // Create an object with the elderly data
         const elderlyData = {
-          email,
-          // firstName,
-          // lastName
+          email
         };
 
         console.log("ELDERLY DATA: ", elderlyData)
@@ -80,8 +67,6 @@ function InsertElderly(props) {
           .then(response => {
             // Reset the input fields after successful insertion
             setEmail("");
-            // setFirstName("");
-            // setLastName("");
 
             if (response.data.success === false && response.data.message === 'Already exists'){
                 alert("Elderly's email is already in the system");
@@ -99,6 +84,7 @@ function InsertElderly(props) {
     
     return (
         <div className='app'>
+        <h1 style={{ fontSize: "25px", marginTop:-40, marginBottom: 15 }}>Insert Elderly Page</h1>
             <div className="rightContainerLogin">
                  <div className='app-drop-down-container-elderly'>
                      <button onClick={e=>handleDropdownFocus(open)}>Other options</button>
@@ -110,14 +96,10 @@ function InsertElderly(props) {
                      )}
                  </div>
             </div>
-            <div className='login-form'>
+            <div className='login-form' style={{marginTop: -150}}>
                 <label>Email:</label>
                 <input type="text" value={email} onChange={handleEmailChange} />
-                {/* <label>First Name:</label>
-                <input type="text" value={firstName} onChange={handleFirstNameChange} />
-                <label>Last Name:</label>
-                <input type="text" value={lastName} onChange={handleLastNameChange} /> */}
-            </div>
+           </div>
             {errorMessage && <div className="error">{errorMessage}</div>}
             {emailErrorMessage && <p className="error">{emailErrorMessage}</p>}
             <button className="btn" onClick={handleAddElderly}>Add Elderly to DB</button>
