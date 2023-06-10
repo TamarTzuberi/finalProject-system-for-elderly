@@ -65,7 +65,7 @@ function InsertElderly(props) {
 
         console.log("ELDERLY DATA: ", elderlyData)
     
-        axios.post("http://localhost:3000/elderly/newElderly", elderlyData)
+        axios.post("https://elderyresearch.cs.bgu.ac.il/elderly/newElderly", elderlyData)
           .then(response => {
             // Reset the input fields after successful insertion
             setEmail("");

@@ -37,7 +37,7 @@ function LoginPage(props) {
     console.log(uname.value);
 
     // Find user login info
-    await axios.post(`http://localhost:3000/users/login/`, {
+    await axios.post(`https://elderyresearch.cs.bgu.ac.il/users/login/`, {
         username: uname.value,
         password: pass.value
       })
