@@ -50,12 +50,14 @@ function InsertElderly(props) {
         if (!email) {
             setErrorMessage("Please fill the required field.");
             return;
-          }
-          if (!validateEmail(email)) {
-            setErrorMessage("");
-            setEmailErrorMessage('Invalid email format!');
-            return;
-          }
+        }
+        if (!validateEmail(email)) {
+          setErrorMessage("");
+          setEmailErrorMessage('Invalid email format!');
+          return;
+        }
+        setErrorMessage("");
+        setEmailErrorMessage("");
         // Create an object with the elderly data
         const elderlyData = {
           email
@@ -69,10 +71,10 @@ function InsertElderly(props) {
             setEmail("");
 
             if (response.data.success === false && response.data.message === 'Already exists'){
-                alert("Elderly's email is already in the system");
+                alert("Elderly's email is already in the system!");
             }
             else{
-                alert("Elderly's information has been successfully entered into the system");
+                alert("Elderly's information has been successfully inserted into the system!");
             }
           })
           .catch(error => {
