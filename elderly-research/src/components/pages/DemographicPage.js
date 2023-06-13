@@ -113,7 +113,7 @@ function DemographicPage(props) {
     
       const getAllElderlys = async () => {
         await axios
-          .get(`http://localhost:3000/elderly/allElderlyUsers`)
+          .get(`https://elderyresearch.cs.bgu.ac.il/elderly/allElderlyUsers`)
           .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
             const filteredElderlys = responseAllElderlys.data.filter(
@@ -130,7 +130,7 @@ function DemographicPage(props) {
 
     const getAllCities = async () =>
     {
-        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
             const allCities = responseAllElderlys.data.map((e) => e.city).filter((city) => city !== null);        
@@ -145,7 +145,7 @@ function DemographicPage(props) {
 
     const getAllGenders = async () =>
     {
-        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
             const allGenders = responseAllElderlys.data.map((e) => e.gender).filter((gender) => gender !== null);            
@@ -163,7 +163,7 @@ function DemographicPage(props) {
 
     const getAllEconomy = async () =>
     {
-        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
             const allEconomy = responseAllElderlys.data.map((e) => e.economicState).filter((economicState) => economicState !== null);        
@@ -260,38 +260,38 @@ function DemographicPage(props) {
         console.log("endDate: ", endDate)
 
 
-    await axios.get(`http://localhost:3000/researcher/features/${"Steps"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"Steps"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseSteps => {
         console.log("STEPS -",responseSteps);
         allFeaturesFromDB.steps = responseSteps.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"ActiveMinutes"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"ActiveMinutes"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseActiveMinutes => {
         console.log("ACTIVE MINUTES -",responseActiveMinutes);
         allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"HR"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"HR"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseHr => {
         console.log("HR -",responseHr);
         allFeaturesFromDB.hr = responseHr.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"Loneliness"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"Loneliness"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseLonliness => {
         console.log("LONLINESS -",responseLonliness);
         allFeaturesFromDB.loneliness = responseLonliness.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"Depression"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"Depression"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseDepression => {
         console.log("DEPRESSION -",responseDepression);
         allFeaturesFromDB.depression = responseDepression.data;
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"PhysicalCondition"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"PhysicalCondition"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responsePhysicalCondition => {
         console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
         allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
     })
-    await axios.get(`http://localhost:3000/researcher/features/${"Sleeping"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
+    await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/${"Sleeping"}/${city}/${gender}/${economicState}/${startDate}/${endDate}`)
     .then(responseSleeping => {
         console.log("SLEEPING -",responseSleeping);
         allFeaturesFromDB.sleeping = responseSleeping.data;
@@ -563,7 +563,7 @@ function DemographicPage(props) {
         rows.push(['Elderly Num', 'Birth Year', 'City', 'Gender', 'Economic State', 'Family Status', 'Long Term Illness', 'Disability'])
 
         await axios
-          .get(`http://localhost:3000/elderly/allElderlyUsers`)
+          .get(`https://elderyresearch.cs.bgu.ac.il/elderly/allElderlyUsers`)
           .then(responseAllElderlys => {
             const elderlyUsers = responseAllElderlys.data;
 

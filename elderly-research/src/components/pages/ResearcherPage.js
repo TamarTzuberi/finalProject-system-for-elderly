@@ -77,7 +77,7 @@ function ResearcherPage(props) {
     
     const getAllElderlys = async () =>
     {
-        await axios.get(`http://localhost:3000/elderly/allElderlyUsers`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/elderly/allElderlyUsers`)
         .then(responseAllElderlys => {
             console.log("ALL ELDERLYS -", responseAllElderlys.data);
             const filteredElderlys = responseAllElderlys.data.filter(elderly =>
@@ -141,38 +141,38 @@ function ResearcherPage(props) {
         const startDate = new Date(start);
         const endDate = new Date(end);
 
-        await axios.get(`http://localhost:3000/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/steps/${elderlyId}/${startDate}/${endDate}`)
         .then(responseSteps => {
             console.log("STEPS -",responseSteps);
             allFeaturesFromDB.steps = responseSteps.data;
         })
-        await axios.get(`http://localhost:3000/researcher/features/activeMinutes/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/activeMinutes/${elderlyId}/${startDate}/${endDate}`)
         .then(responseActiveMinutes => {
             console.log("ACTIVE MINUTES -",responseActiveMinutes);
             allFeaturesFromDB.activeMinutes = responseActiveMinutes.data;
         })
-        await axios.get(`http://localhost:3000/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/hr/${elderlyId}/${startDate}/${endDate}`)
         .then(responseHr => {
             console.log("HR -",responseHr);
             allFeaturesFromDB.hr = responseHr.data;
         })
-        await axios.get(`http://localhost:3000/researcher/features/loneliness/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/loneliness/${elderlyId}/${startDate}/${endDate}`)
         .then(responseLonliness => {
             console.log("LONLINESS -",responseLonliness);
             allFeaturesFromDB.loneliness = responseLonliness.data;
         })
-        await axios.get(`http://localhost:3000/researcher/features/depression/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/depression/${elderlyId}/${startDate}/${endDate}`)
         .then(responseDepression => {
             console.log("DEPRESSION -",responseDepression);
             allFeaturesFromDB.depression = responseDepression.data;
         })
-        await axios.get(`http://localhost:3000/researcher/features/physicalCondition/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/physicalCondition/${elderlyId}/${startDate}/${endDate}`)
         .then(responsePhysicalCondition => {
             console.log("PHYSICAL CONDITION -",responsePhysicalCondition);
             allFeaturesFromDB.physicalCondition = responsePhysicalCondition.data;
 
         })
-        await axios.get(`http://localhost:3000/researcher/features/sleep/${elderlyId}/${startDate}/${endDate}`)
+        await axios.get(`https://elderyresearch.cs.bgu.ac.il/researcher/features/sleep/${elderlyId}/${startDate}/${endDate}`)
         .then(responseSleeping => {
             console.log("SLEEPING -",responseSleeping);
             allFeaturesFromDB.sleeping = responseSleeping.data;
